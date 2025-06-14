@@ -20,28 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Nothing yet
 
 ### Fixed
-- Fixed all ESLint errors throughout the codebase
-- Added proper TypeScript types to replace `any` usage
-- Fixed import type consistency for type-only imports
-- Added typed interfaces for OAuth2 token responses
-- Fixed Error.captureStackTrace type checking
-- Updated tsconfig.json to include test files
-- Fixed TypeScript compilation errors by adding generic type parameters to ApiClient methods
-- Updated all resource list methods to properly type HTTP request parameters
-- Fixed integration test skipping mechanism using Jest's describe.skip
-- Resolved syntax errors in integration test files
-- Temporarily disabled code coverage thresholds
-- Excluded test files from ESLint checks
-- Fixed test file compilation errors and excluded tests from TypeScript checking
-- Rewrote OAuth2Auth unit tests to match actual implementation
-- Simplified unit tests to focus on basic functionality
-- Removed complex mocking in favor of simple validation tests
-- Updated GitHub Actions to use non-deprecated action versions
+- Nothing yet
 
 ### Security
 - Nothing yet
 
-## [1.0.0] - 2024-01-XX
+## [1.0.0] - 2025-06-14
 
 ### Added
 - Initial release of the Timesheet TypeScript SDK
@@ -74,6 +58,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests with high coverage
 - Example applications
 - GitHub Actions CI/CD pipeline
+
+### Fixed
+- Fixed all ESLint errors throughout the codebase
+- Added proper TypeScript types to replace `any` usage
+- Fixed import type consistency for type-only imports
+- Added typed interfaces for OAuth2 token responses
+- Fixed Error.captureStackTrace type checking
+- Updated tsconfig.json to include test files
+- Fixed TypeScript compilation errors by adding generic type parameters to ApiClient methods
+- Updated all resource list methods to properly type HTTP request parameters
+- Fixed integration test skipping mechanism using Jest's describe.skip
+- Resolved syntax errors in integration test files
+- Temporarily disabled code coverage thresholds
+- Excluded test files from ESLint checks
+- Fixed test file compilation errors and excluded tests from TypeScript checking
+- Rewrote OAuth2Auth unit tests to match actual implementation
+- Simplified unit tests to focus on basic functionality
+- Removed complex mocking in favor of simple validation tests
+- Updated GitHub Actions to use non-deprecated action versions
 
 [Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/timesheetIO/timesheet-typescript/releases/tag/v1.0.0 
