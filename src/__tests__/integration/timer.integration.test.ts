@@ -1,31 +1,16 @@
 import { TimesheetClient } from '../../index';
 import type { TimerStartRequest } from '../../models';
-import { skipIfNoApiKey, testConfig } from '../setup';
+import { createTestClient, describeIntegration, testConfig } from '../setup';
 
-describe('Timer Resource Integration Tests', () => {
-  // Skip all tests if no API key is available
-  if (skipIfNoApiKey()) {
-    return;
-  }
-
+describeIntegration('Timer Resource Integration Tests', () => {
   let client: TimesheetClient;
 
   beforeAll(() => {
-    // Use a dummy API key for testing if not provided
-    const apiKey = testConfig.apiKey || 'ts_test.dummy123456';
-    client = new TimesheetClient({
-      apiKey,
-      baseUrl: testConfig.baseUrl,
-    });
+    client = createTestClient();
   });
 
   describe('Timer State Operations', () => {
     it('should get current timer state', async () => {
-      if (!testConfig.apiKey) {
-        console.log('Skipping test: Real API key not provided');
-        return;
-      }
-
       const timer = await client.timer.get();
       expect(timer).toBeDefined();
       expect(timer).toHaveProperty('status');
@@ -133,20 +118,10 @@ describe('Timer Resource Integration Tests', () => {
 
   describe('Error handling', () => {
     it('should handle starting timer without project ID', async () => {
-      if (!testConfig.apiKey) {
-        console.log('Skipping test: Real API key not provided');
-        return;
-      }
-
       await expect(client.timer.start({} as TimerStartRequest)).rejects.toThrow();
     });
 
     it('should handle pausing when timer is not running', async () => {
-      if (!testConfig.apiKey) {
-        console.log('Skipping test: Real API key not provided');
-        return;
-      }
-
       // First ensure timer is stopped
       const currentTimer = await client.timer.get();
       if (currentTimer.status === 'running' || currentTimer.status === 'paused') {
@@ -158,11 +133,6 @@ describe('Timer Resource Integration Tests', () => {
     });
 
     it('should handle resuming when timer is not paused', async () => {
-      if (!testConfig.apiKey) {
-        console.log('Skipping test: Real API key not provided');
-        return;
-      }
-
       // Ensure timer is stopped
       const currentTimer = await client.timer.get();
       if (currentTimer.status !== 'stopped') {
@@ -174,11 +144,6 @@ describe('Timer Resource Integration Tests', () => {
     });
 
     it('should handle updating timer with invalid data', async () => {
-      if (!testConfig.apiKey) {
-        console.log('Skipping test: Real API key not provided');
-        return;
-      }
-
       await expect(
         client.timer.update({
           startDateTime: 'invalid-date',

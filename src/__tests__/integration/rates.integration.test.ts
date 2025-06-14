@@ -1,12 +1,12 @@
-import { createTestClient, skipIfNoApiKey, testConfig, testData } from '../setup';
+import { createTestClient, describeIntegration, testConfig, testData } from '../setup';
 import type { TimesheetClient } from '../../index';
 
-describe('Rates Resource Integration Tests', () => {
+describeIntegration('Rates Resource Integration Tests', () => {
   let client: TimesheetClient;
   let createdRateId: string | undefined;
 
   beforeAll(() => {
-    if (skipIfNoApiKey()) return;
+    
     client = createTestClient();
   });
 

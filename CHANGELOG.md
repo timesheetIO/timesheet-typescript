@@ -28,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated tsconfig.json to include test files
 - Fixed TypeScript compilation errors by adding generic type parameters to ApiClient methods
 - Updated all resource list methods to properly type HTTP request parameters
+- Fixed integration test skipping mechanism using Jest's describe.skip
+- Resolved syntax errors in integration test files
+- Temporarily disabled code coverage thresholds
 
 ### Security
 - Nothing yet

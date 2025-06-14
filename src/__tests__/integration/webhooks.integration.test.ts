@@ -1,12 +1,12 @@
-import { createTestClient, skipIfNoApiKey, testConfig, testData } from '../setup';
+import { createTestClient, describeIntegration, testConfig, testData } from '../setup';
 import type { TimesheetClient } from '../../index';
 
-describe('Webhooks Resource Integration Tests', () => {
+describeIntegration('Webhooks Resource Integration Tests', () => {
   let client: TimesheetClient;
   let createdWebhookId: string | undefined;
 
   beforeAll(() => {
-    if (skipIfNoApiKey()) return;
+    
     client = createTestClient();
   });
 
@@ -20,14 +20,6 @@ describe('Webhooks Resource Integration Tests', () => {
       }
     }
   });
-
-  if (!testConfig.apiKey) {
-    test('API key not configured - skipping integration tests', () => {
-      console.log('ℹ️  To run integration tests, set TIMESHEET_API_KEY in your .env file');
-      expect(true).toBe(true);
-    });
-    return;
-  }
 
   describe('Webhooks CRUD Operations', () => {
     test('should create a new webhook', async () => {

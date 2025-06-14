@@ -1,12 +1,12 @@
-import { createTestClient, skipIfNoApiKey, testConfig, testData } from '../setup';
+import { createTestClient, describeIntegration, testConfig, testData } from '../setup';
 import type { TimesheetClient } from '../../index';
 
-describe('Tags Resource Integration Tests', () => {
+describeIntegration('Tags Resource Integration Tests', () => {
   let client: TimesheetClient;
   let createdTagId: string | undefined;
 
   beforeAll(() => {
-    if (skipIfNoApiKey()) return;
+    
     client = createTestClient();
   });
 

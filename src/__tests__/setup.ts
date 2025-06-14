@@ -54,6 +54,15 @@ export const skipIfNoApiKey = (): boolean => {
   return false;
 };
 
+// Helper for conditionally running integration tests
+export const describeIntegration = (name: string, fn: () => void): void => {
+  if (testConfig.skipIntegrationTests) {
+    describe.skip(name, fn);
+  } else {
+    describe(name, fn);
+  }
+};
+
 // Global test setup
 beforeAll(() => {
   if (testConfig.skipIntegrationTests) {

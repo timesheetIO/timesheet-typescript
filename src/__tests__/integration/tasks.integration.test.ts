@@ -1,13 +1,13 @@
-import { createTestClient, skipIfNoApiKey, testConfig, testData } from '../setup';
+import { createTestClient, describeIntegration, testConfig, testData } from '../setup';
 import type { TimesheetClient } from '../../index';
 
-describe('Tasks Resource Integration Tests', () => {
+describeIntegration('Tasks Resource Integration Tests', () => {
   let client: TimesheetClient;
   let createdTaskId: string | undefined;
   let createdProjectId: string | undefined;
 
   beforeAll(async () => {
-    if (skipIfNoApiKey()) return;
+    
     client = createTestClient();
 
     // Create a test project for tasks
