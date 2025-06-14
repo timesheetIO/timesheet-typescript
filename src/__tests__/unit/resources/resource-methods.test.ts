@@ -45,7 +45,9 @@ describe('Resource Method Verification', () => {
 
       // Verify non-existent methods
       expect((projectResource as unknown as Record<string, unknown>)['getMembers']).toBeUndefined();
-      expect((projectResource as unknown as Record<string, unknown>)['updateMembers']).toBeUndefined();
+      expect(
+        (projectResource as unknown as Record<string, unknown>)['updateMembers'],
+      ).toBeUndefined();
     });
   });
 

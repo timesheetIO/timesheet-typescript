@@ -18,7 +18,10 @@ export class OrganizationResource extends Resource {
   }
 
   async list(params?: OrganizationListParams): Promise<NavigablePage<Organization>> {
-    const response = await this.http.get<Page<Organization>, OrganizationListParams>(this.basePath, params);
+    const response = await this.http.get<Page<Organization>, OrganizationListParams>(
+      this.basePath,
+      params,
+    );
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 
