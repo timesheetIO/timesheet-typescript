@@ -15,7 +15,7 @@ export class DocumentResource extends Resource {
   }
 
   async list(params?: DocumentListParams): Promise<NavigablePage<Document>> {
-    const response = await this.http.get<Page<Document>>(this.basePath, params);
+    const response = await this.http.get<Page<Document>, DocumentListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

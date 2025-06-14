@@ -15,7 +15,7 @@ export class ProjectResource extends Resource {
   }
 
   async list(params?: ProjectListParams): Promise<NavigablePage<Project>> {
-    const response = await this.http.get<Page<Project>>(this.basePath, params);
+    const response = await this.http.get<Page<Project>, ProjectListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

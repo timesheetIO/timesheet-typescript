@@ -15,7 +15,7 @@ export class AutomationResource extends Resource {
   }
 
   async list(params?: AutomationListParams): Promise<NavigablePage<Automation>> {
-    const response = await this.http.get<Page<Automation>>(this.basePath, params);
+    const response = await this.http.get<Page<Automation>, AutomationListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

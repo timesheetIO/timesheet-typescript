@@ -17,7 +17,7 @@ export class ExpenseResource extends Resource {
   }
 
   async list(params?: ExpenseListParams): Promise<NavigablePage<Expense>> {
-    const response = await this.http.get<Page<Expense>>(this.basePath, params);
+    const response = await this.http.get<Page<Expense>, ExpenseListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

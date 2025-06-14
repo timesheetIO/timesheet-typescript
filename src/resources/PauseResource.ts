@@ -16,7 +16,7 @@ export class PauseResource extends Resource {
   }
 
   async list(params?: PauseListParams): Promise<NavigablePage<Pause>> {
-    const response = await this.http.get<Page<Pause>>(this.basePath, params);
+    const response = await this.http.get<Page<Pause>, PauseListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

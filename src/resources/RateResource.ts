@@ -9,7 +9,7 @@ export class RateResource extends Resource {
   }
 
   async list(params?: RateListParams): Promise<NavigablePage<Rate>> {
-    const response = await this.http.get<Page<Rate>>(this.basePath, params);
+    const response = await this.http.get<Page<Rate>, RateListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

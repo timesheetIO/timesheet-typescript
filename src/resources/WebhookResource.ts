@@ -15,7 +15,7 @@ export class WebhookResource extends Resource {
   }
 
   async list(params?: WebhookListParams): Promise<NavigablePage<Webhook>> {
-    const response = await this.http.get<Page<Webhook>>(this.basePath, params);
+    const response = await this.http.get<Page<Webhook>, WebhookListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added typed interfaces for OAuth2 token responses
 - Fixed Error.captureStackTrace type checking
 - Updated tsconfig.json to include test files
+- Fixed TypeScript compilation errors by adding generic type parameters to ApiClient methods
+- Updated all resource list methods to properly type HTTP request parameters
 
 ### Security
 - Nothing yet

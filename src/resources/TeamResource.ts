@@ -17,7 +17,7 @@ export class TeamResource extends Resource {
   }
 
   async list(params?: TeamListParams): Promise<NavigablePage<Team>> {
-    const response = await this.http.get<Page<Team>>(this.basePath, params);
+    const response = await this.http.get<Page<Team>, TeamListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

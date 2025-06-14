@@ -10,7 +10,7 @@ export class NoteResource extends Resource {
   }
 
   async list(params?: NoteListParams): Promise<NavigablePage<Note>> {
-    const response = await this.http.get<Page<Note>>(this.basePath, params);
+    const response = await this.http.get<Page<Note>, NoteListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

@@ -9,7 +9,7 @@ export class TagResource extends Resource {
   }
 
   async list(params?: TagListParams): Promise<NavigablePage<Tag>> {
-    const response = await this.http.get<Page<Tag>>(this.basePath, params);
+    const response = await this.http.get<Page<Tag>, TagListParams>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

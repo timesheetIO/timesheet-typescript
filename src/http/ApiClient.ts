@@ -116,46 +116,46 @@ export class ApiClient {
   /**
    * GET request.
    */
-  async get<T>(path: string, params?: Record<string, unknown>): Promise<T> {
+  async get<T, P = Record<string, unknown>>(path: string, params?: P): Promise<T> {
     return this.request<T>({
       method: 'GET',
       url: path,
-      params,
+      params: params as Record<string, unknown>,
     });
   }
 
   /**
    * POST request.
    */
-  async post<T>(path: string, data?: unknown, params?: Record<string, unknown>): Promise<T> {
+  async post<T, P = Record<string, unknown>>(path: string, data?: unknown, params?: P): Promise<T> {
     return this.request<T>({
       method: 'POST',
       url: path,
       data,
-      params,
+      params: params as Record<string, unknown>,
     });
   }
 
   /**
    * PUT request.
    */
-  async put<T>(path: string, data?: unknown, params?: Record<string, unknown>): Promise<T> {
+  async put<T, P = Record<string, unknown>>(path: string, data?: unknown, params?: P): Promise<T> {
     return this.request<T>({
       method: 'PUT',
       url: path,
       data,
-      params,
+      params: params as Record<string, unknown>,
     });
   }
 
   /**
    * DELETE request.
    */
-  async delete<T>(path: string, params?: Record<string, unknown>): Promise<T> {
+  async delete<T, P = Record<string, unknown>>(path: string, params?: P): Promise<T> {
     return this.request<T>({
       method: 'DELETE',
       url: path,
-      params,
+      params: params as Record<string, unknown>,
     });
   }
 
