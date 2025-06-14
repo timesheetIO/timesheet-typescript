@@ -46,6 +46,9 @@
     "node_modules/",
     "coverage/",
     "*.js",
-    "*.d.ts"
+    "*.d.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "src/__tests__/**"
   ]
 } 

@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed integration test skipping mechanism using Jest's describe.skip
 - Resolved syntax errors in integration test files
 - Temporarily disabled code coverage thresholds
+- Excluded test files from ESLint checks
 
 ### Security
 - Nothing yet
