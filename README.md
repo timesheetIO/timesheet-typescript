@@ -10,7 +10,6 @@ The official TypeScript SDK for the [Timesheet API](https://timesheet.io), provi
 
 ## Features
 
-- ✅ **Complete API Coverage** - All 108 endpoints implemented
 - ✅ **Type-Safe** - Full TypeScript support with comprehensive types
 - ✅ **Modern Architecture** - Promise-based with async/await support
 - ✅ **Authentication** - Built-in API Key and OAuth2 support
@@ -43,14 +42,14 @@ const client = new TimesheetClient({
 
 // Create a project
 const project = await client.projects.create({
-  name: 'My Project',
+  title: 'My Project',
   description: 'Created with TypeScript SDK'
 });
 
 // Start a timer
-const timer = await client.timers.start({
+const timer = await client.timer.start({
   projectId: project.id,
-  description: 'Working on TypeScript SDK'
+  startDateTime: new Date().toISOString()
 });
 
 // List recent tasks
@@ -60,7 +59,7 @@ const tasks = await client.tasks.list({
   order: 'desc'
 });
 
-console.log(`Found ${tasks.count} tasks`);
+console.log(`Found ${tasks.params.count} tasks`);
 ```
 
 ## Authentication
@@ -77,9 +76,7 @@ const client = new TimesheetClient({
 
 ```typescript
 const client = new TimesheetClient({
-  oauth2: {
-    accessToken: 'your-access-token'
-  }
+  oauth2Token: 'your-access-token'
 });
 
 // With automatic token refresh
@@ -102,16 +99,17 @@ client.projects      // Project management
 client.tags          // Tag management
 client.teams         // Team management
 client.organizations // Organization settings
-client.timers        // Real-time time tracking
+client.timer         // Real-time time tracking
 client.rates         // Billing rates
 client.expenses      // Expense tracking
 client.notes         // Note attachments
 client.pauses        // Break time tracking
 client.documents     // Document generation
-client.reports       // Analytics and reporting
 client.webhooks      // Event notifications
-client.integrations  // Third-party integrations
-client.export        // Data export
+client.automations   // Time tracking automation
+client.todos         // Task management
+client.profile       // User profile
+client.settings      // User settings
 ```
 
 ## Examples
@@ -123,9 +121,9 @@ client.export        // Data export
 const task = await client.tasks.create({
   projectId: 'project-id',
   description: 'Implement new feature',
-  startTime: new Date(Date.now() - 3600000), // 1 hour ago
-  endTime: new Date(),
-  tags: ['development', 'frontend'],
+  startDateTime: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+  endDateTime: new Date().toISOString(),
+  tagIds: ['tag-1', 'tag-2'],
   billable: true
 });
 
@@ -135,8 +133,8 @@ await client.tasks.update(task.id, {
 });
 
 // Search tasks
-const results = await client.tasks.search({
-  projectId: 'project-id',
+const results = await client.tasks.searchAdvanced({
+  projectIds: ['project-id'],
   search: 'feature',
   startDate: '2024-01-01',
   endDate: '2024-01-31'
@@ -148,17 +146,15 @@ const results = await client.tasks.search({
 ```typescript
 // Create a project
 const project = await client.projects.create({
-  name: 'New Website',
+  title: 'New Website',
   teamId: 'team-id',
-  color: '#3B82F6',
-  billable: true,
-  public: false
+  color: 3,
+  taskDefaultBillable: true
 });
 
 // List projects with filters
 const projects = await client.projects.list({
   status: 'active',
-  billable: true,
   limit: 20
 });
 ```
@@ -167,22 +163,24 @@ const projects = await client.projects.list({
 
 ```typescript
 // Start a timer
-const timer = await client.timers.start({
+const timer = await client.timer.start({
   projectId: 'project-id',
-  description: 'Working on task'
+  startDateTime: new Date().toISOString()
 });
 
 // Pause the timer
-await client.timers.pause({
-  description: 'Taking a break'
+await client.timer.pause({
+  startDateTime: new Date().toISOString()
 });
 
 // Resume the timer
-await client.timers.resume();
+await client.timer.resume({
+  endDateTime: new Date().toISOString()
+});
 
 // Stop and create task
-const task = await client.timers.stop({
-  description: 'Completed work'
+const stoppedTimer = await client.timer.stop({
+  endDateTime: new Date().toISOString()
 });
 ```
 
@@ -191,25 +189,24 @@ const task = await client.timers.stop({
 ```typescript
 // Manual pagination
 const firstPage = await client.tasks.list({ limit: 50 });
-console.log(`Page ${firstPage.page} of ${firstPage.totalPages}`);
+console.log(`Page ${firstPage.params.page} of ${firstPage.totalPages}`);
+console.log(`Total items: ${firstPage.params.count}`);
 
 // Get next page
-if (firstPage.hasMore) {
-  const nextPage = await client.tasks.list({ 
-    limit: 50, 
-    page: firstPage.page + 1 
-  });
+if (firstPage.hasNextPage) {
+  const nextPage = await firstPage.nextPage();
 }
 
 // Auto-pagination with async iterator
-for await (const task of client.tasks.listAll({ projectId: 'project-id' })) {
+const allTasks = await client.tasks.list({ projectId: 'project-id' });
+for await (const task of allTasks) {
   console.log(task.description);
 }
 
-// Collect all results
-const allTasks = await client.tasks.listAll({ 
+// Collect all results across all pages
+const allTasksArray = await client.tasks.list({ 
   projectId: 'project-id' 
-}).toArray();
+}).then(page => page.toArray());
 ```
 
 ### Error Handling
@@ -217,95 +214,21 @@ const allTasks = await client.tasks.listAll({
 ```typescript
 import { 
   TimesheetApiError,
-  TimesheetNotFoundError,
-  TimesheetRateLimitError,
-  TimesheetAuthError 
+  TimesheetAuthError,
+  TimesheetRateLimitError
 } from '@timesheet/sdk';
 
 try {
   const task = await client.tasks.get('task-id');
 } catch (error) {
-  if (error instanceof TimesheetNotFoundError) {
-    console.error('Task not found');
+  if (error instanceof TimesheetAuthError) {
+    console.error('Authentication failed');
   } else if (error instanceof TimesheetRateLimitError) {
     console.error(`Rate limited. Retry after: ${error.retryAfter}s`);
-  } else if (error instanceof TimesheetAuthError) {
-    console.error('Authentication failed');
   } else if (error instanceof TimesheetApiError) {
-    console.error(`API error: ${error.code} - ${error.message}`);
+    console.error(`API error: ${error.statusCode} - ${error.message}`);
   }
 }
-```
-
-### Advanced Configuration
-
-```typescript
-const client = new TimesheetClient({
-  apiKey: 'your-api-key',
-  baseUrl: 'https://custom.timesheet.io',   // Custom API endpoint
-  timeout: 30000,                            // Request timeout (30s)
-  maxRetries: 5,                             // Retry attempts
-  retryDelay: 1000,                          // Initial retry delay
-  onRetry: (attempt, error) => {             // Retry callback
-    console.log(`Retry attempt ${attempt}: ${error.message}`);
-  }
-});
-```
-
-### Webhook Handling
-
-```typescript
-// Create a webhook
-const webhook = await client.webhooks.create({
-  target: 'https://your-app.com/webhook',
-  events: ['task.created', 'task.updated'],
-  secret: 'your-webhook-secret'
-});
-
-// Verify webhook signature (in your webhook handler)
-import { verifyWebhookSignature } from '@timesheet/sdk';
-
-app.post('/webhook', (req, res) => {
-  const signature = req.headers['x-timesheet-signature'];
-  const isValid = verifyWebhookSignature(
-    req.body,
-    signature,
-    'your-webhook-secret'
-  );
-  
-  if (!isValid) {
-    return res.status(401).send('Invalid signature');
-  }
-  
-  // Process webhook event
-  const event = req.body;
-  console.log(`Received ${event.type} event`);
-});
-```
-
-### Export Data
-
-```typescript
-// Export tasks as CSV
-const csvExport = await client.export.generate({
-  type: 'csv',
-  resource: 'tasks',
-  filters: {
-    projectId: 'project-id',
-    startDate: '2024-01-01',
-    endDate: '2024-01-31'
-  }
-});
-
-// Export as PDF report
-const pdfReport = await client.export.generate({
-  type: 'pdf',
-  resource: 'timesheet',
-  filters: {
-    userId: 'user-id',
-    period: 'month'
-  }
-});
 ```
 
 ## TypeScript Support
@@ -316,20 +239,21 @@ The SDK is written in TypeScript and provides comprehensive type definitions:
 import type { 
   Task,
   Project,
-  TaskCreateParams,
-  TaskListParams,
-  PaginatedResponse
+  TaskCreateRequest,
+  TaskListQueryParams,
+  NavigablePage
 } from '@timesheet/sdk';
 
 // All methods are fully typed
 const task: Task = await client.tasks.get('task-id');
-const projects: PaginatedResponse<Project> = await client.projects.list();
+const projects: NavigablePage<Project> = await client.projects.list();
 
 // Type-safe parameters
-const params: TaskCreateParams = {
+const params: TaskCreateRequest = {
   projectId: 'project-id',
   description: 'Task description',
-  billable: true
+  billable: true,
+  startDateTime: new Date().toISOString()
 };
 ```
 
@@ -366,7 +290,6 @@ npm run docs
 ## Support
 
 - 📧 Email: support@timesheet.io
-- 💬 Discord: [Join our community](https://discord.gg/timesheet)
 - 🐛 Issues: [GitHub Issues](https://github.com/timesheetIO/timesheet-typescript/issues)
 
 ## License
@@ -379,4 +302,4 @@ See [CHANGELOG.md](CHANGELOG.md) for a list of changes.
 
 ---
 
-Made with ❤️ by the [Timesheet.io](https://timesheet.io) team 
+Made with ❤️ by the [timesheet.io](https://timesheet.io) team 

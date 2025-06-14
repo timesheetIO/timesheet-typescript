@@ -1,34 +1,37 @@
-import { PageParams, SearchParams, SortablePageParams } from './common';
+import type { PageParams } from './common';
 
 export interface Tag {
   id: string;
   name: string;
-  color?: string;
+  color?: number;
   teamId?: string;
   archived?: boolean;
   created?: number;
   lastUpdate?: number;
 }
 
+export interface TagList {
+  items: Tag[];
+  params: TagListParams;
+}
+
 export interface TagCreateRequest {
   name: string;
-  color?: string;
+  color?: number;
   teamId?: string;
 }
 
 export interface TagUpdateRequest {
   name?: string;
-  color?: string;
+  color?: number;
   archived?: boolean;
 }
 
-export interface TagListParams extends SortablePageParams {
+export interface TagListParams extends PageParams {
   teamId?: string;
-  archived?: boolean;
-}
-
-export interface TagSearchParams extends SearchParams {
-  name?: string;
-  teamId?: string;
-  archived?: boolean;
+  projectId?: string;
+  status?: 'all' | 'active' | 'inactive';
+  statistics?: boolean;
+  sort?: 'alpha' | 'status' | 'created';
+  order?: 'asc' | 'desc';
 }

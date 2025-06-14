@@ -1,69 +1,87 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
+import type { ApiClient } from '../http';
+import type {
+  Page,
   Team,
-  TeamMember,
   TeamCreateRequest,
-  TeamUpdateRequest,
-  TeamMemberCreateRequest,
-  TeamMemberUpdateRequest,
   TeamListParams,
-  TeamSearchParams,
-  TeamActivateRequest
-} from '../models/Team';
+  TeamMember,
+  TeamMemberListParams,
+  TeamUpdateRequest,
+} from '../models';
+import { NavigablePage } from '../models';
+import { Resource } from './Resource';
 
-export class TeamResource {
-  constructor(private readonly client: ApiClient) {}
-  
+export class TeamResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/teams');
+  }
+
   async list(params?: TeamListParams): Promise<NavigablePage<Team>> {
-    const response = await this.client.get<Page<Team>>('/v1/teams', params);
+    const response = await this.http.get<Page<Team>>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
-  
+
   async create(data: TeamCreateRequest): Promise<Team> {
-    return this.client.post<Team>('/v1/teams', data);
+    return this.http.post<Team>(this.basePath, data);
   }
-  
-  async get(id: string): Promise<Team> {
-    return this.client.get<Team>(`/v1/teams/${id}`);
-  }
-  
+
   async update(id: string, data: TeamUpdateRequest): Promise<Team> {
-    return this.client.put<Team>(`/v1/teams/${id}`, data);
+    return this.http.put<Team>(`${this.basePath}/${encodeURIComponent(id)}`, data);
   }
-  
+
+  async get(id: string): Promise<Team> {
+    return this.http.get<Team>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/teams/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
-  async search(params: TeamSearchParams): Promise<NavigablePage<Team>> {
-    const response = await this.client.post<Page<Team>>('/v1/teams/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
+
+  /**
+   * Search teams with parameters using POST
+   * @param params Search parameters
+   */
+  async search(params: TeamListParams): Promise<NavigablePage<Team>> {
+    const response = await this.http.post<Page<Team>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
-  
-  async listMembers(teamId: string, params?: TeamListParams): Promise<NavigablePage<TeamMember>> {
-    const response = await this.client.get<Page<TeamMember>>(`/v1/teams/${teamId}/members`, params);
-    return new NavigablePage(response, (page) => this.listMembers(teamId, { ...params, page }));
+
+  /**
+   * List team members
+   * @param teamId Team identifier
+   * @param params List parameters
+   */
+  async listMembers(
+    teamId: string,
+    params: TeamMemberListParams,
+  ): Promise<NavigablePage<TeamMember>> {
+    const response = await this.http.post<Page<TeamMember>>(
+      `${this.basePath}/${teamId}/members/list`,
+      params,
+    );
+    return this.createNavigablePage(response, (page) =>
+      this.listMembers(teamId, { ...params, page }),
+    );
   }
-  
-  async addMember(teamId: string, data: TeamMemberCreateRequest): Promise<TeamMember> {
-    return this.client.post<TeamMember>(`/v1/teams/${teamId}/members`, data);
+
+  /**
+   * Get team member
+   * @param teamId Team identifier
+   * @param memberId Member identifier
+   */
+  async getMember(teamId: string, memberId: string): Promise<TeamMember> {
+    return this.http.get<TeamMember>(`${this.basePath}/${teamId}/members/${memberId}`);
   }
-  
-  async updateMember(teamId: string, memberId: string, data: TeamMemberUpdateRequest): Promise<TeamMember> {
-    return this.client.put<TeamMember>(`/v1/teams/${teamId}/members/${memberId}`, data);
-  }
-  
-  async removeMember(teamId: string, memberId: string): Promise<void> {
-    return this.client.delete(`/v1/teams/${teamId}/members/${memberId}`);
-  }
-  
-  async activate(data: TeamActivateRequest): Promise<Team> {
-    return this.client.post<Team>(`/v1/teams/activate/${data.teamName}`, {});
-  }
-  
-  async getColleagues(): Promise<NavigablePage<TeamMember>> {
-    const response = await this.client.get<Page<TeamMember>>('/v1/teams/getColleagues');
-    return new NavigablePage(response);
+
+  /**
+   * Get colleagues
+   * @param params Parameters for filtering colleagues
+   */
+  async getColleagues(params?: TeamMemberListParams): Promise<NavigablePage<TeamMember>> {
+    const response = await this.http.post<Page<TeamMember>>(
+      `${this.basePath}/getColleagues`,
+      params,
+    );
+    return this.createNavigablePage(response, (page) => this.getColleagues({ ...params, page }));
   }
 }

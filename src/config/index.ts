@@ -1,2 +1,2 @@
 export * from './ClientConfig';
-export * from './RetryConfig'; 
+export * from './RetryConfig';

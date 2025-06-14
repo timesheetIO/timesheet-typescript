@@ -1,17 +1,14 @@
-import { ApiClient } from '../http';
-import {
-  Settings,
-  SettingsUpdateRequest
-} from '../models/Settings';
+import type { ApiClient } from '../http';
+import type { Settings, SettingsUpdateRequest } from '../models';
 
 export class SettingsResource {
-  constructor(private readonly client: ApiClient) {}
-  
+  constructor(private readonly http: ApiClient) {}
+
   async get(): Promise<Settings> {
-    return this.client.get<Settings>('/v1/settings');
+    return this.http.get<Settings>('/v1/settings');
   }
-  
+
   async update(data: SettingsUpdateRequest): Promise<Settings> {
-    return this.client.put<Settings>('/v1/settings', data);
+    return this.http.put<Settings>('/v1/settings', data);
   }
 }

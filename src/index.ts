@@ -1,20 +1,22 @@
-import { ApiClient } from './http/ApiClient';
-import { Authentication, ApiKeyAuth, OAuth2Auth } from './auth';
-import { ClientConfig, RetryConfig } from './config';
+import { ApiClient } from './http';
+import type { Authentication } from './auth';
+import { ApiKeyAuth, OAuth2Auth } from './auth';
+import type { ClientConfig } from './config';
+import { RetryConfig } from './config';
 import {
-  OrganizationResource,
-  TeamResource,
-  ProjectResource,
-  TaskResource,
-  RateResource,
-  TagResource,
-  ExpenseResource,
-  NoteResource,
-  PauseResource,
-  ProfileResource,
-  SettingsResource,
   AutomationResource,
   DocumentResource,
+  ExpenseResource,
+  NoteResource,
+  OrganizationResource,
+  PauseResource,
+  ProfileResource,
+  ProjectResource,
+  RateResource,
+  SettingsResource,
+  TagResource,
+  TaskResource,
+  TeamResource,
   TimerResource,
   TodoResource,
   WebhookResource,
@@ -30,14 +32,14 @@ export * from './resources';
 
 /**
  * Main entry point for the Timesheet SDK.
- * 
+ *
  * @example
  * ```typescript
  * // Using API Key
  * const client = new TimesheetClient({
  *   apiKey: 'your-api-key'
  * });
- * 
+ *
  * // Using OAuth2
  * const client = new TimesheetClient({
  *   oauth2Token: 'your-access-token'
@@ -46,7 +48,7 @@ export * from './resources';
  */
 export class TimesheetClient {
   private readonly apiClient: ApiClient;
-  
+
   // Resource APIs
   public readonly organizations: OrganizationResource;
   public readonly teams: TeamResource;
@@ -64,24 +66,24 @@ export class TimesheetClient {
   public readonly timer: TimerResource;
   public readonly todos: TodoResource;
   public readonly webhooks: WebhookResource;
-  
+
   /**
    * Creates a new TimesheetClient instance.
-   * 
+   *
    * @param options Configuration options
    */
   constructor(options: TimesheetClientOptions) {
     const authentication = this.createAuthentication(options);
-    
+
     const config: ClientConfig = {
-      baseUrl: options.baseUrl || 'https://api.timesheet.io/v1',
+      baseUrl: options.baseUrl || 'https://api.timesheet.io',
       authentication,
       retryConfig: options.retryConfig || RetryConfig.default(),
       httpClient: options.httpClient,
     };
-    
+
     this.apiClient = new ApiClient(config);
-    
+
     // Initialize resources
     this.organizations = new OrganizationResource(this.apiClient);
     this.teams = new TeamResource(this.apiClient);
@@ -100,7 +102,7 @@ export class TimesheetClient {
     this.todos = new TodoResource(this.apiClient);
     this.webhooks = new WebhookResource(this.apiClient);
   }
-  
+
   private createAuthentication(options: TimesheetClientOptions): Authentication {
     if (options.apiKey) {
       return new ApiKeyAuth(options.apiKey);
@@ -110,7 +112,7 @@ export class TimesheetClient {
       return new OAuth2Auth(
         options.oauth2.clientId,
         options.oauth2.clientSecret,
-        options.oauth2.refreshToken
+        options.oauth2.refreshToken,
       );
     } else if (options.authentication) {
       return options.authentication;
@@ -128,12 +130,12 @@ export interface TimesheetClientOptions {
    * API key for authentication.
    */
   apiKey?: string;
-  
+
   /**
    * OAuth2 bearer token for authentication.
    */
   oauth2Token?: string;
-  
+
   /**
    * OAuth2 configuration with refresh capability.
    */
@@ -142,23 +144,23 @@ export interface TimesheetClientOptions {
     clientSecret: string;
     refreshToken: string;
   };
-  
+
   /**
    * Custom authentication implementation.
    */
   authentication?: Authentication;
-  
+
   /**
    * Custom base URL for the API.
-   * @default 'https://api.timesheet.io/v1'
+   * @default 'https://api.timesheet.io'
    */
   baseUrl?: string;
-  
+
   /**
    * Custom retry configuration.
    */
   retryConfig?: RetryConfig;
-  
+
   /**
    * Custom HTTP client (axios instance).
    */
@@ -168,4 +170,4 @@ export interface TimesheetClientOptions {
 // Export convenience function
 export function createClient(options: TimesheetClientOptions): TimesheetClient {
   return new TimesheetClient(options);
-} 
+}

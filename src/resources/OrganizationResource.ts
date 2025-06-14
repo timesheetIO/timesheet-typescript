@@ -1,126 +1,49 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
+import type { ApiClient } from '../http';
+import type {
   Organization,
-  OrganizationMember,
   OrganizationCreateRequest,
-  OrganizationUpdateRequest,
-  OrganizationMemberCreateRequest,
-  OrganizationMemberUpdateRequest,
   OrganizationListParams,
-  OrganizationSearchParams
-} from '../models/Organization';
+  OrganizationUpdateRequest,
+  Page,
+} from '../models';
+import { NavigablePage } from '../models';
+import { Resource } from './Resource';
 
 /**
  * Resource for managing organizations.
  */
-export class OrganizationResource {
-  constructor(private readonly client: ApiClient) {}
-  
-  /**
-   * List organizations.
-   * 
-   * @param params Optional list parameters
-   * @returns A page of organizations
-   */
+export class OrganizationResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/organizations');
+  }
+
   async list(params?: OrganizationListParams): Promise<NavigablePage<Organization>> {
-    const response = await this.client.get<Page<Organization>>('/v1/organizations', params);
+    const response = await this.http.get<Page<Organization>>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
-  
-  /**
-   * Create an organization.
-   * 
-   * @param data Organization creation data
-   * @returns The created organization
-   */
+
   async create(data: OrganizationCreateRequest): Promise<Organization> {
-    return this.client.post<Organization>('/v1/organizations', data);
+    return this.http.post<Organization>(this.basePath, data);
   }
-  
-  /**
-   * Get an organization by ID.
-   * 
-   * @param id Organization ID
-   * @returns The organization
-   */
-  async get(id: string): Promise<Organization> {
-    return this.client.get<Organization>(`/v1/organizations/${id}`);
-  }
-  
-  /**
-   * Update an organization.
-   * 
-   * @param id Organization ID
-   * @param data Update data
-   * @returns The updated organization
-   */
+
   async update(id: string, data: OrganizationUpdateRequest): Promise<Organization> {
-    return this.client.put<Organization>(`/v1/organizations/${id}`, data);
+    return this.http.put<Organization>(`${this.basePath}/${encodeURIComponent(id)}`, data);
   }
-  
-  /**
-   * Delete an organization.
-   * 
-   * @param id Organization ID
-   */
+
+  async get(id: string): Promise<Organization> {
+    return this.http.get<Organization>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/organizations/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
+
   /**
-   * Search organizations.
-   * 
+   * Search organizations with parameters using POST
    * @param params Search parameters
-   * @returns A page of organizations
    */
-  async search(params: OrganizationSearchParams): Promise<NavigablePage<Organization>> {
-    const response = await this.client.post<Page<Organization>>('/v1/organizations/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
+  async search(params: OrganizationListParams): Promise<NavigablePage<Organization>> {
+    const response = await this.http.post<Page<Organization>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
-  
-  /**
-   * List organization members.
-   * 
-   * @param organizationId Organization ID
-   * @param params Optional list parameters
-   * @returns A page of organization members
-   */
-  async listMembers(organizationId: string, params?: OrganizationListParams): Promise<NavigablePage<OrganizationMember>> {
-    const response = await this.client.get<Page<OrganizationMember>>(`/v1/organizations/${organizationId}/members`, params);
-    return new NavigablePage(response, (page) => this.listMembers(organizationId, { ...params, page }));
-  }
-  
-  /**
-   * Add a member to an organization.
-   * 
-   * @param organizationId Organization ID
-   * @param data Member data
-   * @returns The added member
-   */
-  async addMember(organizationId: string, data: OrganizationMemberCreateRequest): Promise<OrganizationMember> {
-    return this.client.post<OrganizationMember>(`/v1/organizations/${organizationId}/members`, data);
-  }
-  
-  /**
-   * Update organization member permissions.
-   * 
-   * @param organizationId Organization ID
-   * @param memberId Member ID
-   * @param data Update data
-   * @returns The updated member
-   */
-  async updateMember(organizationId: string, memberId: string, data: OrganizationMemberUpdateRequest): Promise<OrganizationMember> {
-    return this.client.put<OrganizationMember>(`/v1/organizations/${organizationId}/members/${memberId}`, data);
-  }
-  
-  /**
-   * Remove a member from an organization.
-   * 
-   * @param organizationId Organization ID
-   * @param memberId Member ID
-   */
-  async removeMember(organizationId: string, memberId: string): Promise<void> {
-    return this.client.delete(`/v1/organizations/${organizationId}/members/${memberId}`);
-  }
-} 
+}

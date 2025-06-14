@@ -1,33 +1,47 @@
-import { PageParams, SearchParams, SortablePageParams } from './common';
+import type { ListParams } from './common';
+import type { Team } from './Team';
 
 export interface Rate {
   id: string;
-  title: string;
-  multiplier: number;
-  extraCharge?: number;
-  teamId?: string;
-  created?: number;
+  user?: string;
   lastUpdate?: number;
+  created?: number;
+  deleted?: boolean;
+  title: string;
+  factor: number;
+  extra?: number;
+  enabled?: boolean;
+  archived?: boolean;
+  team?: Team;
+}
+
+export interface RateList {
+  items: Rate[];
+  params: RateListParams;
 }
 
 export interface RateCreateRequest {
   title: string;
-  multiplier: number;
-  extraCharge?: number;
+  factor: number;
+  extra?: number;
+  enabled?: boolean;
+  archived?: boolean;
   teamId?: string;
 }
 
 export interface RateUpdateRequest {
   title?: string;
-  multiplier?: number;
-  extraCharge?: number;
+  factor?: number;
+  extra?: number;
+  enabled?: boolean;
+  archived?: boolean;
+  deleted?: boolean;
 }
 
-export interface RateListParams extends SortablePageParams {
+export interface RateListParams extends ListParams {
   teamId?: string;
-}
-
-export interface RateSearchParams extends SearchParams {
-  title?: string;
-  teamId?: string;
+  projectId?: string;
+  status?: 'all' | 'active' | 'inactive';
+  sort?: 'alpha' | 'status' | 'created';
+  order?: 'asc' | 'desc';
 }

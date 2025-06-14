@@ -1,56 +1,75 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
+import type { ApiClient } from '../http';
+import type {
+  NavigablePage,
+  Page,
   Task,
   TaskCreateRequest,
-  TaskUpdateRequest,
+  TaskListParams,
   TaskStatusUpdateRequest,
   TaskTimesUpdateRequest,
-  TaskListParams,
-  TaskSearchParams
-} from '../models/Task';
+  TaskUpdateRequest,
+} from '../models';
+import { DateUtils } from '../utils/date';
+import { Resource } from './Resource';
 
-export class TaskResource {
-  constructor(private readonly client: ApiClient) {}
-  
-  async list(params?: TaskListParams): Promise<NavigablePage<Task>> {
-    const response = await this.client.get<Page<Task>>('/v1/tasks', params);
-    return new NavigablePage(response, (page) => this.list({ ...params, page }));
+export class TaskResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/tasks');
   }
-  
+
   async create(data: TaskCreateRequest): Promise<Task> {
-    return this.client.post<Task>('/v1/tasks', data);
+    const formattedData = {
+      ...data,
+      startDateTime: DateUtils.formatTimestamp(data.startDateTime),
+      endDateTime: data.endDateTime ? DateUtils.formatTimestamp(data.endDateTime) : undefined,
+    };
+    return this.http.post<Task>(this.basePath, formattedData);
   }
-  
-  async get(id: string): Promise<Task> {
-    return this.client.get<Task>(`/v1/tasks/${id}`);
-  }
-  
+
   async update(id: string, data: TaskUpdateRequest): Promise<Task> {
-    return this.client.put<Task>(`/v1/tasks/${id}`, data);
+    const formattedData = {
+      ...data,
+      startDateTime: data.startDateTime ? DateUtils.formatTimestamp(data.startDateTime) : undefined,
+      endDateTime: data.endDateTime ? DateUtils.formatTimestamp(data.endDateTime) : undefined,
+    };
+    return this.http.put<Task>(`${this.basePath}/${encodeURIComponent(id)}`, formattedData);
   }
-  
+
+  async get(id: string): Promise<Task> {
+    return this.http.get<Task>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/tasks/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
-  async search(params: TaskSearchParams): Promise<NavigablePage<Task>> {
-    const response = await this.client.post<Page<Task>>('/v1/tasks/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
+
+  /**
+   * Search tasks with parameters using POST
+   * @param params Search parameters
+   */
+  async search(params: TaskListParams): Promise<NavigablePage<Task>> {
+    const response = await this.http.post<Page<Task>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
-  
-  async updateStatus(data: TaskStatusUpdateRequest): Promise<void> {
-    return this.client.put('/v1/tasks/updateStatus', data);
+
+  /**
+   * Update task status (billable, paid, billed)
+   * @param data Status update data
+   */
+  async updateStatus(data: TaskStatusUpdateRequest): Promise<Task> {
+    return this.http.put<Task>(`${this.basePath}/updateStatus`, data);
   }
-  
-  async updateTimes(data: TaskTimesUpdateRequest): Promise<void> {
-    return this.client.put('/v1/tasks/updateTimes', data);
-  }
-  
-  async print(id: string): Promise<Blob> {
-    const response = await this.client.get(`/v1/tasks/print/${id}`, undefined, {
-      responseType: 'blob'
-    });
-    return response as Blob;
+
+  /**
+   * Update task times
+   * @param data Times update data
+   */
+  async updateTimes(data: TaskTimesUpdateRequest): Promise<Task> {
+    const formattedData = {
+      ...data,
+      startDateTime: DateUtils.formatTimestamp(data.startDateTime),
+      endDateTime: DateUtils.formatTimestamp(data.endDateTime),
+    };
+    return this.http.put<Task>(`${this.basePath}/updateTimes`, formattedData);
   }
 }

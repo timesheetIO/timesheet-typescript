@@ -1,39 +1,46 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
+import type { ApiClient } from '../http';
+import type {
   Automation,
   AutomationCreateRequest,
-  AutomationUpdateRequest,
   AutomationListParams,
-  AutomationSearchParams
-} from '../models/Automation';
+  AutomationUpdateRequest,
+  Page,
+} from '../models';
+import { NavigablePage } from '../models';
+import { Resource } from './Resource';
 
-export class AutomationResource {
-  constructor(private readonly client: ApiClient) {}
-  
+export class AutomationResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/automations');
+  }
+
   async list(params?: AutomationListParams): Promise<NavigablePage<Automation>> {
-    const response = await this.client.get<Page<Automation>>('/v1/automations', params);
+    const response = await this.http.get<Page<Automation>>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
-  
+
   async create(data: AutomationCreateRequest): Promise<Automation> {
-    return this.client.post<Automation>('/v1/automations', data);
+    return this.http.post<Automation>(this.basePath, data);
   }
-  
-  async get(id: string): Promise<Automation> {
-    return this.client.get<Automation>(`/v1/automations/${id}`);
-  }
-  
+
   async update(id: string, data: AutomationUpdateRequest): Promise<Automation> {
-    return this.client.put<Automation>(`/v1/automations/${id}`, data);
+    return this.http.put<Automation>(`${this.basePath}/${encodeURIComponent(id)}`, data);
   }
-  
+
+  async get(id: string): Promise<Automation> {
+    return this.http.get<Automation>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/automations/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
-  async search(params: AutomationSearchParams): Promise<NavigablePage<Automation>> {
-    const response = await this.client.post<Page<Automation>>('/v1/automations/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
+
+  /**
+   * Search automations with parameters using POST
+   * @param params Search parameters
+   */
+  async search(params: AutomationListParams): Promise<NavigablePage<Automation>> {
+    const response = await this.http.post<Page<Automation>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
 }

@@ -1,26 +1,13 @@
 export interface Profile {
-  uid: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  image?: string;
-  timezone?: string;
-  language?: string;
-  currency?: string;
-  created?: number;
-  lastUpdate?: number;
+  email?: string;
+  imageUrl?: string;
+  firstname?: string;
+  lastname?: string;
 }
 
 export interface ProfileUpdateRequest {
+  email?: string;
+  imageUrl?: string;
   firstname?: string;
   lastname?: string;
-  image?: string;
-  timezone?: string;
-  language?: string;
-  currency?: string;
-}
-
-export interface ProfileDeleteRequest {
-  password: string;
-  reason?: string;
 }

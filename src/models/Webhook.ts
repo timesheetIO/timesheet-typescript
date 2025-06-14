@@ -1,33 +1,30 @@
-import { PageParams, SortablePageParams } from './common';
+import type { ListParams } from './common';
 
 export interface Webhook {
   id: string;
   target: string;
   event: string;
-  enabled: boolean;
   created?: number;
   lastUpdate?: number;
-  lastTriggered?: number;
-  triggerCount?: number;
+}
+
+export interface WebhookList {
+  items: Webhook[];
+  params: WebhookListParams;
 }
 
 export interface WebhookCreateRequest {
   target: string;
   event: string;
-  enabled?: boolean;
 }
 
 export interface WebhookUpdateRequest {
   target?: string;
   event?: string;
-  enabled?: boolean;
 }
 
-export interface WebhookListParams extends SortablePageParams {
+export interface WebhookListParams extends ListParams {
+  sort?: 'created' | 'lastUpdate' | 'target' | 'event';
+  order?: 'asc' | 'desc';
   event?: string;
-  enabled?: boolean;
-}
-
-export interface WebhookSearchParams extends WebhookListParams {
-  target?: string;
 }

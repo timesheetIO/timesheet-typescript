@@ -7,7 +7,7 @@ export class RetryConfig {
   public readonly maxDelay: number;
   public readonly backoffMultiplier: number;
   public readonly retryableStatusCodes: number[];
-  
+
   constructor(options: Partial<RetryConfigOptions> = {}) {
     this.maxRetries = options.maxRetries ?? 3;
     this.initialDelay = options.initialDelay ?? 100;
@@ -15,7 +15,7 @@ export class RetryConfig {
     this.backoffMultiplier = options.backoffMultiplier ?? 2.0;
     this.retryableStatusCodes = options.retryableStatusCodes ?? [429, 502, 503, 504];
   }
-  
+
   /**
    * Returns the default retry configuration.
    */
@@ -33,28 +33,28 @@ export interface RetryConfigOptions {
    * @default 3
    */
   maxRetries: number;
-  
+
   /**
    * Initial delay before the first retry in milliseconds.
    * @default 100
    */
   initialDelay: number;
-  
+
   /**
    * Maximum delay between retries in milliseconds.
    * @default 10000
    */
   maxDelay: number;
-  
+
   /**
    * Backoff multiplier for exponential backoff.
    * @default 2.0
    */
   backoffMultiplier: number;
-  
+
   /**
    * HTTP status codes that should trigger a retry.
    * @default [429, 502, 503, 504]
    */
   retryableStatusCodes: number[];
-} 
+}

@@ -1,5 +1,5 @@
 export interface Settings {
-  theme?: 'light' | 'dark';
+  theme?: 'light' | 'dark' | 'system';
   timezone?: string;
   language?: string;
   currency?: string;

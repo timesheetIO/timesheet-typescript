@@ -6,7 +6,7 @@ import { TimesheetApiError } from './TimesheetApiError';
 export class TimesheetAuthError extends TimesheetApiError {
   /**
    * Creates a new authentication exception.
-   * 
+   *
    * @param message The error message
    * @param statusCode The HTTP status code (usually 401)
    * @param responseBody The response body
@@ -15,4 +15,4 @@ export class TimesheetAuthError extends TimesheetApiError {
     super(message, statusCode, responseBody, 'authentication_error');
     this.name = 'TimesheetAuthError';
   }
-} 
+}

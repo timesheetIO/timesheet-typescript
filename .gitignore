@@ -81,4 +81,6 @@ typedoc/
 .yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
-.pnp.* 
+.pnp.*
+
+CLAUDE.md

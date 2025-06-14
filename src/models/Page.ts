@@ -1,3 +1,5 @@
+import type { ListParams } from './common';
+
 /**
  * Represents a page of results with pagination support.
  */
@@ -6,31 +8,11 @@ export interface Page<T> {
    * The items in this page.
    */
   items: T[];
-  
+
   /**
-   * Total count of items across all pages.
+   * Pagination and sorting parameters.
    */
-  count: number;
-  
-  /**
-   * Current page number (1-based).
-   */
-  page: number;
-  
-  /**
-   * Page size limit.
-   */
-  limit: number;
-  
-  /**
-   * Sort field.
-   */
-  sort?: string;
-  
-  /**
-   * Sort order.
-   */
-  order?: string;
+  params: ListParams;
 }
 
 /**
@@ -38,41 +20,30 @@ export interface Page<T> {
  */
 export class NavigablePage<T> implements Page<T> {
   items: T[];
-  count: number;
-  page: number;
-  limit: number;
-  sort?: string;
-  order?: string;
-  
-  private nextPageLoader?: (page: number) => Promise<NavigablePage<T>>;
-  
-  constructor(
-    data: Page<T>,
-    nextPageLoader?: (page: number) => Promise<NavigablePage<T>>
-  ) {
+  params: ListParams;
+
+  private readonly nextPageLoader?: (page: number) => Promise<NavigablePage<T>>;
+
+  constructor(data: Page<T>, nextPageLoader?: (page: number) => Promise<NavigablePage<T>>) {
     this.items = data.items;
-    this.count = data.count;
-    this.page = data.page;
-    this.limit = data.limit;
-    this.sort = data.sort;
-    this.order = data.order;
+    this.params = data.params;
     this.nextPageLoader = nextPageLoader;
   }
-  
+
   /**
    * Gets the total number of pages.
    */
   get totalPages(): number {
-    return Math.ceil(this.count / this.limit);
+    return Math.ceil((this.params?.count || 0) / (this.params?.limit || 25));
   }
-  
+
   /**
    * Checks if there is a next page.
    */
   get hasNextPage(): boolean {
-    return this.page < this.totalPages;
+    return (this.params?.page || 1) < this.totalPages;
   }
-  
+
   /**
    * Loads the next page.
    */
@@ -83,38 +54,38 @@ export class NavigablePage<T> implements Page<T> {
     if (!this.nextPageLoader) {
       throw new Error('Next page loader not configured');
     }
-    return this.nextPageLoader(this.page + 1);
+    return this.nextPageLoader((this.params.page || 1) + 1);
   }
-  
+
   /**
    * Returns an async iterator for auto-pagination.
    */
   async *[Symbol.asyncIterator](): AsyncIterator<T> {
     let currentPage: NavigablePage<T> = this;
-    
+
     while (true) {
       for (const item of currentPage.items) {
         yield item;
       }
-      
+
       if (!currentPage.hasNextPage) {
         break;
       }
-      
+
       currentPage = await currentPage.nextPage();
     }
   }
-  
+
   /**
    * Converts all pages to an array (loads all pages).
    */
   async toArray(): Promise<T[]> {
     const allItems: T[] = [];
-    
+
     for await (const item of this) {
       allItems.push(item);
     }
-    
+
     return allItems;
   }
-} 
+}

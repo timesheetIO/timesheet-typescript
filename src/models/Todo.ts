@@ -1,17 +1,36 @@
-import { PageParams, SortablePageParams } from './common';
+import type { ListParams } from './common';
+import type { Project } from './Project';
 
 export interface Todo {
   id: string;
   name: string;
   description?: string;
-  projectId: string;
+  project?: Project;
   status: 'open' | 'closed';
   dueDate?: string;
-  assignedTo?: string[];
-  estimatedTime?: number;
-  actualTime?: number;
+  assignedUsers?: string;
+  estimatedHours?: number;
+  estimatedMinutes?: number;
+  duration?: number;
+  durationBreak?: number;
+  salaryTotal?: number;
+  salaryBreak?: number;
+  expenses?: number;
+  expensesPaid?: number;
+  mileage?: number;
+  user?: string;
+  deleted?: boolean;
   created?: number;
   lastUpdate?: number;
+}
+
+export interface TodoList {
+  items: Todo[];
+  params: TodoListParams;
+  todoStatistic?: {
+    open: number;
+    closed: number;
+  };
 }
 
 export interface TodoCreateRequest {
@@ -19,8 +38,9 @@ export interface TodoCreateRequest {
   description?: string;
   projectId: string;
   dueDate?: string;
-  assignedTo?: string[];
-  estimatedTime?: number;
+  assignedUsers?: string;
+  estimatedHours?: number;
+  estimatedMinutes?: number;
 }
 
 export interface TodoUpdateRequest {
@@ -28,17 +48,14 @@ export interface TodoUpdateRequest {
   description?: string;
   status?: 'open' | 'closed';
   dueDate?: string;
-  assignedTo?: string[];
-  estimatedTime?: number;
+  assignedUsers?: string;
+  estimatedHours?: number;
+  estimatedMinutes?: number;
+  deleted?: boolean;
 }
 
-export interface TodoListParams extends SortablePageParams {
+export interface TodoListParams extends ListParams {
   projectId?: string;
   status?: 'open' | 'closed';
-  assignedTo?: string;
-}
-
-export interface TodoSearchParams extends TodoListParams {
-  name?: string;
-  description?: string;
+  assignedUsers?: string;
 }

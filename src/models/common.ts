@@ -2,6 +2,63 @@
  * Common parameter interfaces
  */
 
+/**
+ * Common member interface used across multiple models
+ */
+export interface Member {
+  uid: string;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  employeeId?: string;
+  imageUrl?: string;
+  deleted?: boolean;
+  activity?: Activity;
+  displayName?: string;
+  initials?: string;
+}
+
+/**
+ * Activity information for a member
+ */
+export interface Activity {
+  projectId?: string;
+  projectTitle?: string;
+  projectColor?: number;
+  taskId?: string;
+  startDateTime?: string;
+  endDateTime?: string;
+  location?: string;
+  running?: boolean;
+}
+
+export interface ListParams {
+  /**
+   * Total count of items across all pages.
+   */
+  count?: number;
+
+  /**
+   * Current page number (1-based).
+   */
+  page?: number;
+
+  /**
+   * Page size limit.
+   */
+  limit?: number;
+
+  /**
+   * Sort field.
+   */
+  sort?: string;
+
+  /**
+   * Sort order.
+   */
+  order?: 'asc' | 'desc';
+}
+
 export interface PageParams {
   page?: number;
   limit?: number;
@@ -11,54 +68,3 @@ export interface SortablePageParams extends PageParams {
   sort?: string;
   order?: 'asc' | 'desc';
 }
-
-export interface DateRangeParams {
-  startDate?: Date;
-  endDate?: Date;
-}
-
-export interface SearchParams extends SortablePageParams {
-  search?: string;
-}
-
-/**
- * Common enums
- */
-
-export enum OrganizationPermission {
-  ADMIN = 'admin',
-  BILLING = 'billing',
-  MEMBER = 'member'
-}
-
-export enum TeamPermission {
-  MANAGER = 'manager',
-  MEMBER = 'member'
-}
-
-export enum ProjectPermission {
-  ADMIN = 'admin',
-  MEMBER = 'member'
-}
-
-export enum TaskStatus {
-  PENDING = 'pending',
-  BILLED = 'billed',
-  PAID = 'paid'
-}
-
-export enum DocumentType {
-  INVOICE = 'invoice',
-  TIMESHEET = 'timesheet',
-  WORKRECORD = 'workrecord'
-}
-
-export enum AutomationType {
-  GEOFENCE = 'geofence',
-  WLAN = 'wlan'
-}
-
-export enum AutomationAction {
-  START = 'start',
-  STOP = 'stop'
-} 

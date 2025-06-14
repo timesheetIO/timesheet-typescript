@@ -1,50 +1,46 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
+import type { ApiClient } from '../http';
+import type {
+  Page,
   Project,
-  ProjectMember,
   ProjectCreateRequest,
-  ProjectUpdateRequest,
-  ProjectMemberCreateRequest,
   ProjectListParams,
-  ProjectSearchParams
-} from '../models/Project';
+  ProjectUpdateRequest,
+} from '../models';
+import { NavigablePage } from '../models';
+import { Resource } from './Resource';
 
-export class ProjectResource {
-  constructor(private readonly client: ApiClient) {}
-  
+export class ProjectResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/projects');
+  }
+
   async list(params?: ProjectListParams): Promise<NavigablePage<Project>> {
-    const response = await this.client.get<Page<Project>>('/v1/projects', params);
+    const response = await this.http.get<Page<Project>>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
-  
+
   async create(data: ProjectCreateRequest): Promise<Project> {
-    return this.client.post<Project>('/v1/projects', data);
+    return this.http.post<Project>(this.basePath, data);
   }
-  
-  async get(id: string): Promise<Project> {
-    return this.client.get<Project>(`/v1/projects/${id}`);
-  }
-  
+
   async update(id: string, data: ProjectUpdateRequest): Promise<Project> {
-    return this.client.put<Project>(`/v1/projects/${id}`, data);
+    return this.http.put<Project>(`${this.basePath}/${encodeURIComponent(id)}`, data);
   }
-  
+
+  async get(id: string): Promise<Project> {
+    return this.http.get<Project>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/projects/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
-  async search(params: ProjectSearchParams): Promise<NavigablePage<Project>> {
-    const response = await this.client.post<Page<Project>>('/v1/projects/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
-  }
-  
-  async listMembers(projectId: string, params?: ProjectListParams): Promise<NavigablePage<ProjectMember>> {
-    const response = await this.client.get<Page<ProjectMember>>(`/v1/projects/${projectId}/members`, params);
-    return new NavigablePage(response, (page) => this.listMembers(projectId, { ...params, page }));
-  }
-  
-  async addMember(projectId: string, data: ProjectMemberCreateRequest): Promise<ProjectMember> {
-    return this.client.post<ProjectMember>(`/v1/projects/${projectId}/members`, data);
+
+  /**
+   * Search projects with parameters using POST
+   * @param params Search parameters
+   */
+  async search(params: ProjectListParams): Promise<NavigablePage<Project>> {
+    const response = await this.http.post<Page<Project>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
 }

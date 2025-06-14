@@ -1,45 +1,59 @@
-import { PageParams, SortablePageParams, DateRangeParams } from './common';
+import type { ListParams, Member } from './common';
+import type { Task } from './Task';
 
 export interface Expense {
   id: string;
-  taskId: string;
-  amount: number;
-  currency?: string;
-  description?: string;
-  date: string;
-  refunded?: boolean;
-  fileId?: string;
-  created?: number;
+  user?: string;
+  deleted?: boolean;
   lastUpdate?: number;
+  created?: number;
+  description?: string;
+  dateTime?: string;
+  amount?: number;
+  refunded?: boolean;
+  fileUri?: string;
+  fileName?: string;
+  task?: Task;
+  member?: Member;
+  invoiceId?: string;
+}
+
+export interface ExpenseList {
+  items: Expense[];
+  params: ExpenseListParams;
 }
 
 export interface ExpenseCreateRequest {
-  taskId: string;
-  amount: number;
-  currency?: string;
   description?: string;
-  date: string;
+  dateTime: string;
+  amount?: number;
+  refunded?: boolean;
+  fileUri?: string;
+  fileName?: string;
+  taskId: string;
 }
 
 export interface ExpenseUpdateRequest {
-  amount?: number;
-  currency?: string;
   description?: string;
-  date?: string;
+  dateTime?: string;
+  amount?: number;
+  refunded?: boolean;
+  deleted?: boolean;
+  fileUri?: string;
+  fileName?: string;
 }
 
-export interface ExpenseStatusUpdateRequest {
-  expenseIds: string[];
+export interface ExpenseStatus {
+  id: string;
   refunded: boolean;
 }
 
-export interface ExpenseListParams extends SortablePageParams, DateRangeParams {
+export interface ExpenseListParams extends ListParams {
+  startDate?: string;
+  endDate?: string;
   taskId?: string;
-  refunded?: boolean;
-}
-
-export interface ExpenseSearchParams extends ExpenseListParams {
-  description?: string;
-  minAmount?: number;
-  maxAmount?: number;
+  documentId?: string;
+  filter?: string;
+  projectIds?: string[];
+  taskIds?: string[];
 }

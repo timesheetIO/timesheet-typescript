@@ -1,39 +1,57 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
+import type { ApiClient } from '../http';
+import type {
+  Page,
   Pause,
   PauseCreateRequest,
-  PauseUpdateRequest,
   PauseListParams,
-  PauseSearchParams
-} from '../models/Pause';
+  PauseUpdateRequest,
+} from '../models';
+import { NavigablePage } from '../models';
+import { DateUtils } from '../utils/date';
+import { Resource } from './Resource';
 
-export class PauseResource {
-  constructor(private readonly client: ApiClient) {}
-  
+export class PauseResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/pauses');
+  }
+
   async list(params?: PauseListParams): Promise<NavigablePage<Pause>> {
-    const response = await this.client.get<Page<Pause>>('/v1/pauses', params);
+    const response = await this.http.get<Page<Pause>>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
-  
+
   async create(data: PauseCreateRequest): Promise<Pause> {
-    return this.client.post<Pause>('/v1/pauses', data);
+    const formattedData = {
+      ...data,
+      startDateTime: DateUtils.formatTimestamp(data.startDateTime),
+      endDateTime: DateUtils.formatTimestamp(data.endDateTime),
+    };
+    return this.http.post<Pause>(this.basePath, formattedData);
   }
-  
-  async get(id: string): Promise<Pause> {
-    return this.client.get<Pause>(`/v1/pauses/${id}`);
-  }
-  
+
   async update(id: string, data: PauseUpdateRequest): Promise<Pause> {
-    return this.client.put<Pause>(`/v1/pauses/${id}`, data);
+    const formattedData = {
+      ...data,
+      startDateTime: DateUtils.formatTimestamp(data.startDateTime),
+      endDateTime: DateUtils.formatTimestamp(data.endDateTime),
+    };
+    return this.http.put<Pause>(`${this.basePath}/${encodeURIComponent(id)}`, formattedData);
   }
-  
+
+  async get(id: string): Promise<Pause> {
+    return this.http.get<Pause>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/pauses/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
-  async search(params: PauseSearchParams): Promise<NavigablePage<Pause>> {
-    const response = await this.client.post<Page<Pause>>('/v1/pauses/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
+
+  /**
+   * Search pauses with parameters using POST
+   * @param params Search parameters
+   */
+  async search(params: PauseListParams): Promise<NavigablePage<Pause>> {
+    const response = await this.http.post<Page<Pause>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
 }

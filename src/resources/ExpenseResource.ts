@@ -1,48 +1,66 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
+import type { ApiClient } from '../http';
+import type {
   Expense,
   ExpenseCreateRequest,
-  ExpenseUpdateRequest,
-  ExpenseStatusUpdateRequest,
   ExpenseListParams,
-  ExpenseSearchParams
-} from '../models/Expense';
+  ExpenseStatus,
+  ExpenseUpdateRequest,
+  Page,
+} from '../models';
+import { NavigablePage } from '../models';
+import { DateUtils } from '../utils/date';
+import { Resource } from './Resource';
 
-export class ExpenseResource {
-  constructor(private readonly client: ApiClient) {}
-  
+export class ExpenseResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/expenses');
+  }
+
   async list(params?: ExpenseListParams): Promise<NavigablePage<Expense>> {
-    const response = await this.client.get<Page<Expense>>('/v1/expenses', params);
+    const response = await this.http.get<Page<Expense>>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
-  
+
   async create(data: ExpenseCreateRequest): Promise<Expense> {
-    return this.client.post<Expense>('/v1/expenses', data);
+    const formattedData = {
+      ...data,
+      dateTime: DateUtils.formatTimestamp(data.dateTime),
+    };
+    return this.http.post<Expense>(this.basePath, formattedData);
   }
-  
-  async get(id: string): Promise<Expense> {
-    return this.client.get<Expense>(`/v1/expenses/${id}`);
-  }
-  
+
   async update(id: string, data: ExpenseUpdateRequest): Promise<Expense> {
-    return this.client.put<Expense>(`/v1/expenses/${id}`, data);
+    const formattedData = {
+      ...data,
+      dateTime: data.dateTime ? DateUtils.formatTimestamp(data.dateTime) : undefined,
+    };
+    return this.http.put<Expense>(`${this.basePath}/${encodeURIComponent(id)}`, formattedData);
   }
-  
+
+  async get(id: string): Promise<Expense> {
+    return this.http.get<Expense>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/expenses/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
-  async search(params: ExpenseSearchParams): Promise<NavigablePage<Expense>> {
-    const response = await this.client.post<Page<Expense>>('/v1/expenses/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
+
+  /**
+   * Search expenses with parameters using POST
+   * @param params Search parameters
+   */
+  async search(params: ExpenseListParams): Promise<NavigablePage<Expense>> {
+    const response = await this.http.post<Page<Expense>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
-  
-  async getFileUrl(id: string): Promise<{ url: string }> {
-    return this.client.get<{ url: string }>(`/v1/expenses/getFileUrl/${id}`);
-  }
-  
-  async updateStatus(data: ExpenseStatusUpdateRequest): Promise<void> {
-    return this.client.put('/v1/expenses/updateStatus', data);
+
+  /**
+   * Update expense status
+   * @param id Expense ID
+   * @param data Status update data
+   * @returns Updated expense
+   */
+  async updateStatus(id: string, data: ExpenseStatus): Promise<Expense> {
+    return this.http.put<Expense>(`${this.basePath}/${id}/status`, data);
   }
 }

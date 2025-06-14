@@ -1,39 +1,40 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
-  Tag,
-  TagCreateRequest,
-  TagUpdateRequest,
-  TagListParams,
-  TagSearchParams
-} from '../models/Tag';
+import type { ApiClient } from '../http';
+import type { Page, Tag, TagCreateRequest, TagListParams, TagUpdateRequest } from '../models';
+import { NavigablePage } from '../models';
+import { Resource } from './Resource';
 
-export class TagResource {
-  constructor(private readonly client: ApiClient) {}
-  
+export class TagResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/tags');
+  }
+
   async list(params?: TagListParams): Promise<NavigablePage<Tag>> {
-    const response = await this.client.get<Page<Tag>>('/v1/tags', params);
+    const response = await this.http.get<Page<Tag>>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
-  
+
   async create(data: TagCreateRequest): Promise<Tag> {
-    return this.client.post<Tag>('/v1/tags', data);
+    return this.http.post<Tag>(this.basePath, data);
   }
-  
-  async get(id: string): Promise<Tag> {
-    return this.client.get<Tag>(`/v1/tags/${id}`);
-  }
-  
+
   async update(id: string, data: TagUpdateRequest): Promise<Tag> {
-    return this.client.put<Tag>(`/v1/tags/${id}`, data);
+    return this.http.put<Tag>(`${this.basePath}/${encodeURIComponent(id)}`, data);
   }
-  
+
+  async get(id: string): Promise<Tag> {
+    return this.http.get<Tag>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/tags/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
-  async search(params: TagSearchParams): Promise<NavigablePage<Tag>> {
-    const response = await this.client.post<Page<Tag>>('/v1/tags/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
+
+  /**
+   * Search tags with parameters using POST
+   * @param params Search parameters
+   */
+  async search(params: TagListParams): Promise<NavigablePage<Tag>> {
+    const response = await this.http.post<Page<Tag>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
 }

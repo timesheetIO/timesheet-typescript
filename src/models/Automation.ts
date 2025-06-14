@@ -1,8 +1,9 @@
-import { SortablePageParams } from './common';
+import type { ListParams } from './common';
+import type { Project } from './Project';
 
 export interface Automation {
   id: string;
-  projectId: string;
+  project: Project;
   typeId: 0 | 1 | 2; // 0=geofence, 1=wlan, 2=beacon
   action: 0 | 1 | 2; // 0=start, 1=stop, 2=pause
   enabled: boolean;
@@ -19,6 +20,11 @@ export interface Automation {
   name?: string;
   created?: number;
   lastUpdate?: number;
+}
+
+export interface AutomationList {
+  items: Automation[];
+  params: AutomationListParams;
 }
 
 export interface AutomationCreateRequest {
@@ -49,11 +55,8 @@ export interface AutomationUpdateRequest {
   radius?: number;
 }
 
-export interface AutomationListParams extends SortablePageParams {
+export interface AutomationListParams extends ListParams {
   projectId?: string;
   status?: 'enabled' | 'disabled';
-}
-
-export interface AutomationSearchParams extends AutomationListParams {
   typeId?: 0 | 1 | 2;
 }

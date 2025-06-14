@@ -1,47 +1,46 @@
-import { ApiClient } from '../http';
-import { Page, NavigablePage } from '../models';
-import {
+import type { ApiClient } from '../http';
+import type {
   Document,
   DocumentCreateRequest,
-  DocumentUpdateRequest,
-  DocumentPrintRequest,
   DocumentListParams,
-  DocumentSearchParams
-} from '../models/Document';
+  DocumentUpdateRequest,
+  Page,
+} from '../models';
+import { NavigablePage } from '../models';
+import { Resource } from './Resource';
 
-export class DocumentResource {
-  constructor(private readonly client: ApiClient) {}
-  
+export class DocumentResource extends Resource {
+  constructor(client: ApiClient) {
+    super(client, '/v1/documents');
+  }
+
   async list(params?: DocumentListParams): Promise<NavigablePage<Document>> {
-    const response = await this.client.get<Page<Document>>('/v1/documents', params);
+    const response = await this.http.get<Page<Document>>(this.basePath, params);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
-  
+
   async create(data: DocumentCreateRequest): Promise<Document> {
-    return this.client.post<Document>('/v1/documents', data);
+    return this.http.post<Document>(this.basePath, data);
   }
-  
-  async get(id: string): Promise<Document> {
-    return this.client.get<Document>(`/v1/documents/${id}`);
-  }
-  
+
   async update(id: string, data: DocumentUpdateRequest): Promise<Document> {
-    return this.client.put<Document>(`/v1/documents/${id}`, data);
+    return this.http.put<Document>(`${this.basePath}/${encodeURIComponent(id)}`, data);
   }
-  
+
+  async get(id: string): Promise<Document> {
+    return this.http.get<Document>(`${this.basePath}/${encodeURIComponent(id)}`);
+  }
+
   async delete(id: string): Promise<void> {
-    return this.client.delete(`/v1/documents/${id}`);
+    return this.http.delete(`${this.basePath}/${encodeURIComponent(id)}`);
   }
-  
-  async search(params: DocumentSearchParams): Promise<NavigablePage<Document>> {
-    const response = await this.client.post<Page<Document>>('/v1/documents/search', params);
-    return new NavigablePage(response, (page) => this.search({ ...params, page }));
-  }
-  
-  async print(data: DocumentPrintRequest): Promise<Blob> {
-    const response = await this.client.post('/v1/documents/print', data, {
-      responseType: 'blob'
-    });
-    return response as Blob;
+
+  /**
+   * Search documents with parameters using POST
+   * @param params Search parameters
+   */
+  async search(params: DocumentListParams): Promise<NavigablePage<Document>> {
+    const response = await this.http.post<Page<Document>>(`${this.basePath}/search`, params);
+    return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
   }
 }

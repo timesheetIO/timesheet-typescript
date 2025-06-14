@@ -1,4 +1,4 @@
-import { PageParams, SearchParams, SortablePageParams } from './common';
+import type { ListParams } from './common';
 
 /**
  * Organization details
@@ -8,22 +8,17 @@ export interface Organization {
   name: string;
   description?: string;
   image?: string;
-  color?: string;
+  color?: number;
   created?: number;
   lastUpdate?: number;
 }
 
 /**
- * Organization member
+ * Organization list response
  */
-export interface OrganizationMember {
-  uid: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  permission: 'admin' | 'billing' | 'member';
-  created?: number;
-  lastUpdate?: number;
+export interface OrganizationList {
+  items: Organization[];
+  params: OrganizationListParams;
 }
 
 /**
@@ -33,7 +28,7 @@ export interface OrganizationCreateRequest {
   name: string;
   description?: string;
   image?: string;
-  color?: string;
+  color?: number;
 }
 
 /**
@@ -43,35 +38,10 @@ export interface OrganizationUpdateRequest {
   name?: string;
   description?: string;
   image?: string;
-  color?: string;
+  color?: number;
 }
 
-/**
- * Add organization member request
- */
-export interface OrganizationMemberCreateRequest {
-  email: string;
-  permission: 'admin' | 'billing' | 'member';
+export interface OrganizationListParams extends ListParams {
+  status?: string;
+  deleted?: boolean;
 }
-
-/**
- * Update organization member request
- */
-export interface OrganizationMemberUpdateRequest {
-  permission: 'admin' | 'billing' | 'member';
-}
-
-/**
- * Organization list parameters
- */
-export interface OrganizationListParams extends SearchParams {
-  // Additional filters if needed
-}
-
-/**
- * Organization search parameters
- */
-export interface OrganizationSearchParams extends SearchParams {
-  name?: string;
-  // Additional search criteria
-} 

@@ -1,26 +1,45 @@
-import { PageParams, SortablePageParams, DateRangeParams } from './common';
+import type { ListParams, Member } from './common';
+import type { Task } from './Task';
 
 export interface Note {
   id: string;
-  taskId: string;
-  content: string;
-  date: string;
-  fileId?: string;
-  created?: number;
+  user?: string;
+  deleted?: boolean;
   lastUpdate?: number;
+  created?: number;
+  text?: string;
+  dateTime?: string;
+  uri?: string;
+  driveId?: string;
+  task?: Task;
+  member?: Member;
+}
+
+export interface NoteList {
+  items: Note[];
+  params: NoteListParams;
 }
 
 export interface NoteCreateRequest {
+  text: string;
+  dateTime: string;
+  uri?: string;
+  driveId?: string;
   taskId: string;
-  content: string;
-  date: string;
 }
 
 export interface NoteUpdateRequest {
-  content?: string;
-  date?: string;
+  text: string;
+  dateTime: string;
+  uri?: string;
+  driveId?: string;
+  deleted?: boolean;
 }
 
-export interface NoteListParams extends SortablePageParams, DateRangeParams {
+export interface NoteListParams extends ListParams {
+  startDate?: string;
+  endDate?: string;
   taskId?: string;
+  documentId?: string;
+  taskIds?: string[];
 }
