@@ -1,3 +1,4 @@
+import type { AxiosInstance } from 'axios';
 import type { Authentication } from '../auth/Authentication';
 import type { RetryConfig } from './RetryConfig';
 
@@ -23,5 +24,5 @@ export interface ClientConfig {
   /**
    * Optional custom HTTP client (axios instance).
    */
-  httpClient?: any;
+  httpClient?: AxiosInstance;
 }

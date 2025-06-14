@@ -1,5 +1,5 @@
 import { createTestClient, skipIfNoApiKey, testConfig, testData } from '../setup';
-import { TimesheetClient } from '../../index';
+import type { TimesheetClient } from '../../index';
 
 describe('Automations Resource Integration Tests', () => {
   let client: TimesheetClient;
@@ -154,7 +154,7 @@ describe('Automations Resource Integration Tests', () => {
       await expect(
         client.automations.create({
           projectId: 'non-existent-project-id',
-          typeId: 5 as any, // Invalid typeId
+          typeId: 5 as 0, // Invalid typeId (using valid type but invalid value)
           action: 0,
         }),
       ).rejects.toThrow();

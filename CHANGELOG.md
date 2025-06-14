@@ -20,7 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Nothing yet
 
 ### Fixed
-- Nothing yet
+- Fixed all ESLint errors throughout the codebase
+- Added proper TypeScript types to replace `any` usage
+- Fixed import type consistency for type-only imports
+- Added typed interfaces for OAuth2 token responses
+- Fixed Error.captureStackTrace type checking
+- Updated tsconfig.json to include test files
 
 ### Security
 - Nothing yet

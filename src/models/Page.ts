@@ -61,6 +61,7 @@ export class NavigablePage<T> implements Page<T> {
    * Returns an async iterator for auto-pagination.
    */
   async *[Symbol.asyncIterator](): AsyncIterator<T> {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let currentPage: NavigablePage<T> = this;
 
     while (true) {

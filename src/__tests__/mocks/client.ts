@@ -9,7 +9,7 @@ export const mockClient = {
 } as unknown as ApiClient;
 
 // Helper to reset all mocks
-export const resetMocks = () => {
+export const resetMocks = (): void => {
   (mockClient.get as jest.Mock).mockReset();
   (mockClient.post as jest.Mock).mockReset();
   (mockClient.put as jest.Mock).mockReset();
@@ -18,6 +18,6 @@ export const resetMocks = () => {
 };
 
 // Helper to create a mock response
-export const createMockResponse = <T>(data: T) => {
+export const createMockResponse = <T>(data: T): Promise<T> => {
   return Promise.resolve(data);
 };

@@ -89,8 +89,15 @@ export class OAuth2Auth implements Authentication {
   }
 
   private async performRefresh(): Promise<void> {
+    interface TokenResponse {
+      access_token: string;
+      refresh_token?: string;
+      token_type?: string;
+      expires_in?: number;
+    }
+
     try {
-      const response = await axios.post(
+      const response = await axios.post<TokenResponse>(
         OAuth2Auth.TOKEN_ENDPOINT,
         new URLSearchParams({
           grant_type: 'refresh_token',
@@ -112,8 +119,9 @@ export class OAuth2Auth implements Authentication {
       }
 
       this.parseTokenExpiry();
-    } catch (error: any) {
-      throw new Error(`Failed to refresh OAuth2 token: ${error.message}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to refresh OAuth2 token: ${message}`);
     }
   }
 
@@ -143,8 +151,15 @@ export class OAuth2Auth implements Authentication {
     authorizationCode: string,
     redirectUri: string,
   ): Promise<OAuth2Auth> {
+    interface TokenResponse {
+      access_token: string;
+      refresh_token?: string;
+      token_type?: string;
+      expires_in?: number;
+    }
+
     try {
-      const response = await axios.post(
+      const response = await axios.post<TokenResponse>(
         OAuth2Auth.TOKEN_ENDPOINT,
         new URLSearchParams({
           grant_type: 'authorization_code',
@@ -168,8 +183,9 @@ export class OAuth2Auth implements Authentication {
       } else {
         return new OAuth2Auth(accessToken);
       }
-    } catch (error: any) {
-      throw new Error(`Failed to exchange authorization code: ${error.message}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to exchange authorization code: ${message}`);
     }
   }
 
@@ -196,8 +212,15 @@ export class OAuth2Auth implements Authentication {
   }
 
   private parseTokenExpiry(): void {
+    interface JWTPayload {
+      exp?: number;
+      iat?: number;
+      sub?: string;
+      [key: string]: unknown;
+    }
+
     try {
-      const decoded = jwt.decode(this.accessToken) as any;
+      const decoded = jwt.decode(this.accessToken) as JWTPayload | null;
       if (decoded && decoded.exp) {
         this.tokenExpiry = new Date(decoded.exp * 1000);
       }

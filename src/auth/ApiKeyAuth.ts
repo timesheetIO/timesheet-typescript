@@ -49,10 +49,12 @@ export class ApiKeyAuth implements Authentication {
     return false;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async refresh(): Promise<void> {
     throw new Error('API keys cannot be refreshed');
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getAuthHeaders(): Promise<Record<string, string>> {
     return {
       Authorization: `ApiKey ${this.apiKey}`,

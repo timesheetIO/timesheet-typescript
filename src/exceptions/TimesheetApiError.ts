@@ -29,8 +29,8 @@ export class TimesheetApiError extends Error {
     this.errorCode = errorCode;
 
     // Maintains proper stack trace for where our error was thrown
-    if ((Error as any).captureStackTrace) {
-      (Error as any).captureStackTrace(this, TimesheetApiError);
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, TimesheetApiError);
     }
   }
 }

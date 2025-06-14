@@ -3,6 +3,11 @@ import axios from 'axios';
 import type { ClientConfig } from '../config';
 import { TimesheetApiError, TimesheetAuthError, TimesheetRateLimitError } from '../exceptions';
 
+interface ErrorResponseData {
+  message?: string;
+  code?: string;
+}
+
 /**
  * HTTP client for making API requests.
  */
@@ -51,26 +56,27 @@ export class ApiClient {
       try {
         const response = await this.httpClient.request<T>(config);
         return response.data;
-      } catch (error: any) {
-        lastError = error;
+      } catch (error) {
+        lastError = error as Error;
 
         // Handle authentication errors
-        if (error.response?.status === 401) {
+        if (axios.isAxiosError<ErrorResponseData>(error) && error.response?.status === 401) {
+          const errorData = error.response.data;
           throw new TimesheetAuthError(
-            error.response.data?.message || 'Authentication failed',
+            errorData?.message || 'Authentication failed',
             401,
-            JSON.stringify(error.response.data),
+            JSON.stringify(errorData),
           );
         }
 
         // Handle rate limit errors
-        if (error.response?.status === 429) {
-          const retryAfter = error.response.headers['retry-after'];
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          const retryAfter = error.response.headers['retry-after'] as string | undefined;
           throw new TimesheetRateLimitError('Rate limit exceeded', retryAfter);
         }
 
         // Check if we should retry
-        const status = error.response?.status;
+        const status = axios.isAxiosError(error) ? error.response?.status : undefined;
         if (
           attempt < retryConfig.maxRetries &&
           status &&
@@ -87,12 +93,19 @@ export class ApiClient {
         }
 
         // Non-retryable error
-        throw new TimesheetApiError(
-          error.response?.data?.message || error.message,
-          error.response?.status,
-          JSON.stringify(error.response?.data),
-          error.response?.data?.code,
-        );
+        if (axios.isAxiosError<ErrorResponseData>(error)) {
+          const errorData = error.response?.data;
+          throw new TimesheetApiError(
+            errorData?.message || error.message,
+            error.response?.status,
+            JSON.stringify(errorData),
+            errorData?.code,
+          );
+        } else if (error instanceof Error) {
+          throw new TimesheetApiError(error.message);
+        } else {
+          throw new TimesheetApiError('Unknown error occurred');
+        }
       }
     }
 
@@ -103,7 +116,7 @@ export class ApiClient {
   /**
    * GET request.
    */
-  async get<T>(path: string, params?: any): Promise<T> {
+  async get<T>(path: string, params?: Record<string, unknown>): Promise<T> {
     return this.request<T>({
       method: 'GET',
       url: path,
@@ -114,7 +127,7 @@ export class ApiClient {
   /**
    * POST request.
    */
-  async post<T>(path: string, data?: any, params?: any): Promise<T> {
+  async post<T>(path: string, data?: unknown, params?: Record<string, unknown>): Promise<T> {
     return this.request<T>({
       method: 'POST',
       url: path,
@@ -126,7 +139,7 @@ export class ApiClient {
   /**
    * PUT request.
    */
-  async put<T>(path: string, data?: any, params?: any): Promise<T> {
+  async put<T>(path: string, data?: unknown, params?: Record<string, unknown>): Promise<T> {
     return this.request<T>({
       method: 'PUT',
       url: path,
@@ -138,7 +151,7 @@ export class ApiClient {
   /**
    * DELETE request.
    */
-  async delete<T>(path: string, params?: any): Promise<T> {
+  async delete<T>(path: string, params?: Record<string, unknown>): Promise<T> {
     return this.request<T>({
       method: 'DELETE',
       url: path,

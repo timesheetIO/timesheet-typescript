@@ -3,6 +3,7 @@ import type { Authentication } from './auth';
 import { ApiKeyAuth, OAuth2Auth } from './auth';
 import type { ClientConfig } from './config';
 import { RetryConfig } from './config';
+import type { AxiosInstance } from 'axios';
 import {
   AutomationResource,
   DocumentResource,
@@ -164,7 +165,7 @@ export interface TimesheetClientOptions {
   /**
    * Custom HTTP client (axios instance).
    */
-  httpClient?: any;
+  httpClient?: AxiosInstance;
 }
 
 // Export convenience function

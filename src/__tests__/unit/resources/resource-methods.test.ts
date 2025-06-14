@@ -44,8 +44,8 @@ describe('Resource Method Verification', () => {
       expect(typeof projectResource.search).toBe('function');
 
       // Verify non-existent methods
-      expect((projectResource as any).getMembers).toBeUndefined();
-      expect((projectResource as any).updateMembers).toBeUndefined();
+      expect((projectResource as Record<string, unknown>).getMembers).toBeUndefined();
+      expect((projectResource as Record<string, unknown>).updateMembers).toBeUndefined();
     });
   });
 
@@ -66,13 +66,13 @@ describe('Resource Method Verification', () => {
     });
 
     test('pause method should accept optional TimerPauseRequest parameter', () => {
-      const pauseMethod = timerResource.pause;
+      const pauseMethod = timerResource.pause.bind(timerResource);
       // Check that the method accepts 0 or 1 parameter
       expect(pauseMethod.length).toBeLessThanOrEqual(1);
     });
 
     test('resume method should accept optional TimerResumeRequest parameter', () => {
-      const resumeMethod = timerResource.resume;
+      const resumeMethod = timerResource.resume.bind(timerResource);
       // Check that the method accepts 0 or 1 parameter
       expect(resumeMethod.length).toBeLessThanOrEqual(1);
     });

@@ -1,5 +1,5 @@
 import { createTestClient, skipIfNoApiKey, testConfig, testData } from '../setup';
-import { TimesheetClient } from '../../index';
+import type { TimesheetClient } from '../../index';
 
 describe('Tasks Resource Integration Tests', () => {
   let client: TimesheetClient;

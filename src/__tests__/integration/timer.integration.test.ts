@@ -1,5 +1,5 @@
 import { TimesheetClient } from '../../index';
-import { TimerStartRequest } from '../../models';
+import type { TimerStartRequest } from '../../models';
 import { skipIfNoApiKey, testConfig } from '../setup';
 
 describe('Timer Resource Integration Tests', () => {

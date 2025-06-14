@@ -1,5 +1,5 @@
 import { ApiKeyAuth } from '../../../auth';
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 
 describe('ApiKeyAuth', () => {
   describe('constructor', () => {
@@ -14,11 +14,13 @@ describe('ApiKeyAuth', () => {
     });
 
     test('should throw error with null API key', () => {
-      expect(() => new ApiKeyAuth(null as any)).toThrow('API key cannot be null');
+      expect(() => new ApiKeyAuth(null as unknown as string)).toThrow('API key cannot be null');
     });
 
     test('should throw error with undefined API key', () => {
-      expect(() => new ApiKeyAuth(undefined as any)).toThrow('API key cannot be undefined');
+      expect(() => new ApiKeyAuth(undefined as unknown as string)).toThrow(
+        'API key cannot be undefined',
+      );
     });
 
     test('should throw error with invalid API key format', () => {

@@ -35,16 +35,16 @@ export function createTestClient(): TimesheetClient {
 
 // Test data generators
 export const testData = {
-  generateTaskDescription: () => `Test task ${Date.now()}`,
-  generateProjectTitle: () => `Test project ${Date.now()}`,
-  generateTeamName: () => `Test team ${Date.now()}`,
-  generateTagName: () => `Test tag ${Date.now()}`,
-  generateRateTitle: () => `Test rate ${Date.now()}`,
-  generateWebhookUrl: () => `https://example.com/webhook/${Date.now()}`,
+  generateTaskDescription: (): string => `Test task ${Date.now()}`,
+  generateProjectTitle: (): string => `Test project ${Date.now()}`,
+  generateTeamName: (): string => `Test team ${Date.now()}`,
+  generateTagName: (): string => `Test tag ${Date.now()}`,
+  generateRateTitle: (): string => `Test rate ${Date.now()}`,
+  generateWebhookUrl: (): string => `https://example.com/webhook/${Date.now()}`,
 };
 
 // Utility to skip tests if API key is not available
-export const skipIfNoApiKey = () => {
+export const skipIfNoApiKey = (): boolean => {
   if (!testConfig.apiKey) {
     console.log(
       '⚠️  Skipping integration tests: TIMESHEET_API_KEY not set. Create a .env file with your API key to run integration tests.',

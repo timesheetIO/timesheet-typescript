@@ -1,4 +1,5 @@
 import { createClient, TimesheetClient } from '../../index';
+import type { TimesheetClientOptions } from '../../index';
 import { ApiKeyAuth } from '../../auth';
 
 describe('TimesheetClient', () => {
@@ -47,7 +48,7 @@ describe('TimesheetClient', () => {
 
     test('should throw error when no authentication provided', () => {
       expect(() => {
-        new TimesheetClient({} as any);
+        new TimesheetClient({} as unknown as TimesheetClientOptions);
       }).toThrow('Authentication must be configured');
     });
 
