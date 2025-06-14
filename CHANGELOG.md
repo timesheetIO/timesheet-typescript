@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Excluded test files from ESLint checks
 - Fixed test file compilation errors and excluded tests from TypeScript checking
 - Rewrote OAuth2Auth unit tests to match actual implementation
+- Simplified unit tests to focus on basic functionality
+- Removed complex mocking in favor of simple validation tests
 
 ### Security
 - Nothing yet
