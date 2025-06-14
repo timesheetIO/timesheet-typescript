@@ -24,7 +24,7 @@ describe('TimesheetClient - Simple Tests', () => {
 
   it('should create client with custom base URL', () => {
     const client = new TimesheetClient({
-      apiKey: 'test-api-key',
+      apiKey: 'ts_test.validapikey123456',
       baseUrl: 'https://custom.api.com',
     });
 
