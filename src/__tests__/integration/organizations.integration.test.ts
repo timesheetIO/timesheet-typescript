@@ -1,4 +1,4 @@
-import { createTestClient, describeIntegration, testConfig } from '../setup';
+import { createTestClient, describeIntegration } from '../setup';
 import type { TimesheetClient } from '../../index';
 
 describeIntegration('Organizations Resource Integration Tests', () => {

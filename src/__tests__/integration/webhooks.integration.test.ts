@@ -1,4 +1,4 @@
-import { createTestClient, describeIntegration, testConfig, testData } from '../setup';
+import { createTestClient, describeIntegration, testData } from '../setup';
 import type { TimesheetClient } from '../../index';
 
 describeIntegration('Webhooks Resource Integration Tests', () => {
