@@ -5,25 +5,11 @@ All notable changes to the Timesheet TypeScript SDK will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
 
-### Added
-- Nothing yet
-
-### Changed
-- Nothing yet
-
-### Deprecated
-- Nothing yet
-
-### Removed
-- Nothing yet
+## [1.0.1] - 2025-10-25
 
 ### Fixed
-- Nothing yet
-
-### Security
-- Nothing yet
+- Added missing fields to Profile model to match backend ProfileDto
 
 ## [1.0.0] - 2025-06-14
 
@@ -78,5 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed complex mocking in favor of simple validation tests
 - Updated GitHub Actions to use non-deprecated action versions
 
-[Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/timesheetIO/timesheet-typescript/releases/tag/v1.0.0 
