@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.2] - 2025-10-25
+
+### Added
+- Added team permission properties to Team model
+- Added setting properties to Settings model
+
 ## [1.0.1] - 2025-10-25
 
 ### Fixed
@@ -64,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed complex mocking in favor of simple validation tests
 - Updated GitHub Actions to use non-deprecated action versions
 
-[Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/timesheetIO/timesheet-typescript/releases/tag/v1.0.0 

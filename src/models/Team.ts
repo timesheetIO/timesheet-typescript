@@ -8,6 +8,15 @@ export interface Team {
   image?: string;
   color?: number;
   projectSalaryVisibility?: number;
+  permission?: {
+    role: string;
+    managerOrOwner: boolean;
+    member: boolean;
+    manager: boolean;
+    owner: boolean;
+  };
+  projects: number;
+  members: number;
   created?: number;
   lastUpdate?: number;
 }
