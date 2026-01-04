@@ -12,7 +12,7 @@ The official TypeScript SDK for the [Timesheet API](https://timesheet.io), provi
 
 - ✅ **Type-Safe** - Full TypeScript support with comprehensive types
 - ✅ **Modern Architecture** - Promise-based with async/await support
-- ✅ **Authentication** - Built-in API Key and OAuth2 support
+- ✅ **Authentication** - Built-in API Key, OAuth2, and OAuth 2.1 (PKCE) support
 - ✅ **Error Handling** - Typed exceptions for better error management
 - ✅ **Pagination** - Automatic pagination with async iterators
 - ✅ **Retry Logic** - Configurable retry with exponential backoff
@@ -86,6 +86,64 @@ const client = new TimesheetClient({
     clientSecret: 'your-client-secret',
     refreshToken: 'your-refresh-token'
   }
+});
+```
+
+### OAuth 2.1 Authentication (with PKCE)
+
+OAuth 2.1 is the recommended authentication method for new applications. It requires PKCE (Proof Key for Code Exchange) for enhanced security.
+
+```typescript
+import { OAuth21Auth, generatePkceCodePair } from '@timesheet/sdk';
+
+// Step 1: Generate PKCE code pair
+const pkce = generatePkceCodePair();
+// Store pkce.codeVerifier securely (e.g., in session storage)
+
+// Step 2: Build authorization URL and redirect user
+const authUrl = OAuth21Auth.buildAuthorizationUrl({
+  clientId: 'your-client-id',
+  redirectUri: 'https://your-app.com/callback',
+  codeChallenge: pkce.codeChallenge,
+  codeChallengeMethod: pkce.codeChallengeMethod,
+  state: 'random-csrf-state', // Optional but recommended
+  scope: 'read write',        // Optional
+});
+
+// Redirect user to authUrl...
+
+// Step 3: After user authorizes, exchange code for tokens
+const auth = await OAuth21Auth.fromAuthorizationCode({
+  clientId: 'your-client-id',
+  clientSecret: 'your-client-secret', // Optional for public clients
+  authorizationCode: codeFromCallback,
+  redirectUri: 'https://your-app.com/callback',
+  codeVerifier: pkce.codeVerifier,
+});
+
+// Step 4: Use with TimesheetClient
+const client = new TimesheetClient({
+  authentication: auth
+});
+```
+
+#### Using OAuth 2.1 with existing tokens
+
+```typescript
+import { OAuth21Auth } from '@timesheet/sdk';
+
+// With just an access token
+const auth = new OAuth21Auth('your-access-token');
+
+// With refresh token for automatic token refresh
+const auth = new OAuth21Auth({
+  clientId: 'your-client-id',
+  clientSecret: 'your-client-secret', // Optional for public clients
+  refreshToken: 'your-refresh-token',
+});
+
+const client = new TimesheetClient({
+  authentication: auth
 });
 ```
 
