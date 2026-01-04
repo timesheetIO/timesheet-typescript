@@ -17,7 +17,7 @@ describe('Resource Method Verification', () => {
   beforeEach(() => {
     const mockAuth = new ApiKeyAuth('ts_testkey.123456');
     mockClient = new ApiClient({
-      baseUrl: 'https://api.timesheet.io/v1',
+      baseUrl: 'https://api.timesheet.io',
       authentication: mockAuth,
       retryConfig: new RetryConfig({ maxRetries: 0 }),
     }) as jest.Mocked<ApiClient>;

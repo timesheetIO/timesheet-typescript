@@ -14,7 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PKCE utilities: `generatePkceCodePair()`, `generateCodeVerifier()`, `generateCodeChallenge()`
 - Support for public clients (optional client secret with PKCE)
 - Resource indicators support (RFC 8707)
-- Comprehensive unit tests for OAuth 2.1 (50 new tests)
+- Reports API integration (`reports.timesheet.io`) with full model support:
+  - `DocumentReportResource` - Document PDF/XML generation
+  - `TaskReportResource` - Task report generation
+  - `ExpenseReportResource` - Expense report generation
+  - `NoteReportResource` - Note report generation
+  - `ExportResource` - Excel/CSV/PDF exports with templates and custom fields
+- Complete TypeScript models for reports: `DocumentReport`, `TaskReportItem`, `ExpenseReportItem`, `NoteReportItem`
+- Export template management (CRUD operations)
+- Custom export field management
+- Comprehensive unit tests for Reports API
 
 ## [1.0.2] - 2025-10-25
 

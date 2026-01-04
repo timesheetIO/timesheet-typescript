@@ -55,7 +55,7 @@ describe('TimesheetClient', () => {
     test('should use custom base URL', () => {
       const client = new TimesheetClient({
         apiKey: 'ts_testkey.123',
-        baseUrl: 'https://api.staging.timesheet.io/v1',
+        baseUrl: 'https://api.staging.timesheet.io',
       });
 
       expect(client).toBeInstanceOf(TimesheetClient);

@@ -14,6 +14,7 @@ import {
   ProfileResource,
   ProjectResource,
   RateResource,
+  ReportsClient,
   SettingsResource,
   TagResource,
   TaskResource,
@@ -49,6 +50,7 @@ export * from './resources';
  */
 export class TimesheetClient {
   private readonly apiClient: ApiClient;
+  private readonly reportsApiClient: ApiClient;
 
   // Resource APIs
   public readonly organizations: OrganizationResource;
@@ -69,23 +71,56 @@ export class TimesheetClient {
   public readonly webhooks: WebhookResource;
 
   /**
+   * Reports API for PDF generation, exports, and report data.
+   * Provides access to document, task, expense, and note report generation,
+   * as well as timesheet exports in various formats.
+   *
+   * @example
+   * ```typescript
+   * // Generate a document PDF
+   * const pdfData = await client.reports.documents.getPdf('doc_123');
+   *
+   * // Generate a timesheet export
+   * const exportResult = await client.reports.export.generate({
+   *   report: 1,
+   *   startDate: '2024-01-01',
+   *   endDate: '2024-01-31',
+   *   format: 'xlsx'
+   * });
+   * ```
+   */
+  public readonly reports: ReportsClient;
+
+  /**
    * Creates a new TimesheetClient instance.
    *
    * @param options Configuration options
    */
   constructor(options: TimesheetClientOptions) {
     const authentication = this.createAuthentication(options);
+    const retryConfig = options.retryConfig || RetryConfig.default();
 
+    // Main API client (api.timesheet.io)
     const config: ClientConfig = {
       baseUrl: options.baseUrl || 'https://api.timesheet.io',
       authentication,
-      retryConfig: options.retryConfig || RetryConfig.default(),
+      retryConfig,
       httpClient: options.httpClient,
     };
 
     this.apiClient = new ApiClient(config);
 
-    // Initialize resources
+    // Reports API client (reports.timesheet.io)
+    const reportsConfig: ClientConfig = {
+      baseUrl: options.reportsBaseUrl || 'https://reports.timesheet.io',
+      authentication,
+      retryConfig,
+      httpClient: options.reportsHttpClient,
+    };
+
+    this.reportsApiClient = new ApiClient(reportsConfig);
+
+    // Initialize main API resources
     this.organizations = new OrganizationResource(this.apiClient);
     this.teams = new TeamResource(this.apiClient);
     this.projects = new ProjectResource(this.apiClient);
@@ -102,6 +137,9 @@ export class TimesheetClient {
     this.timer = new TimerResource(this.apiClient);
     this.todos = new TodoResource(this.apiClient);
     this.webhooks = new WebhookResource(this.apiClient);
+
+    // Initialize reports API resources
+    this.reports = new ReportsClient(this.reportsApiClient);
   }
 
   private createAuthentication(options: TimesheetClientOptions): Authentication {
@@ -152,10 +190,16 @@ export interface TimesheetClientOptions {
   authentication?: Authentication;
 
   /**
-   * Custom base URL for the API.
+   * Custom base URL for the main API.
    * @default 'https://api.timesheet.io'
    */
   baseUrl?: string;
+
+  /**
+   * Custom base URL for the Reports API.
+   * @default 'https://reports.timesheet.io'
+   */
+  reportsBaseUrl?: string;
 
   /**
    * Custom retry configuration.
@@ -163,9 +207,14 @@ export interface TimesheetClientOptions {
   retryConfig?: RetryConfig;
 
   /**
-   * Custom HTTP client (axios instance).
+   * Custom HTTP client (axios instance) for the main API.
    */
   httpClient?: AxiosInstance;
+
+  /**
+   * Custom HTTP client (axios instance) for the Reports API.
+   */
+  reportsHttpClient?: AxiosInstance;
 }
 
 // Export convenience function

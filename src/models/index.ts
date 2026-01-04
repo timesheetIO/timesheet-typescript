@@ -16,3 +16,4 @@ export * from './Webhook';
 export * from './Automation';
 export * from './Settings';
 export * from './Profile';
+export * from './Reports';

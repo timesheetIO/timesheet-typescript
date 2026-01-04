@@ -11,7 +11,7 @@ const isCI = process.env['CI'] === 'true' || process.env['NODE_ENV'] === 'test';
 // Export test configuration
 export const testConfig = {
   apiKey: process.env['TIMESHEET_API_KEY'],
-  baseUrl: process.env['TIMESHEET_API_BASE_URL'] || 'https://api.timesheet.io/v1',
+  baseUrl: process.env['TIMESHEET_API_BASE_URL'] || 'https://api.timesheet.io',
   projectId: process.env['TEST_PROJECT_ID'],
   teamId: process.env['TEST_TEAM_ID'],
   organizationId: process.env['TEST_ORGANIZATION_ID'],

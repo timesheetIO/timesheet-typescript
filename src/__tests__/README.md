@@ -21,7 +21,7 @@ cat > .env << EOF
 TIMESHEET_API_KEY=your_api_key_here
 
 # Optional - defaults to production
-TIMESHEET_API_BASE_URL=https://api.timesheet.io/v1
+TIMESHEET_API_BASE_URL=https://api.timesheet.io
 
 # Optional - for specific test scenarios
 TEST_PROJECT_ID=

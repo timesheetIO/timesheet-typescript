@@ -78,41 +78,16 @@ export interface WebhookList {
 
 export interface WebhookCreateRequest {
   target: string;
-  /**
-   * Event type(s) that trigger this webhook.
-   * Can be a single event (e.g., 'timer.start') or multiple comma-separated events (e.g., 'timer.start,timer.stop')
-   * @see WebhookEventType for valid event types
-   * @see combineWebhookEvents helper function to combine multiple events
-   * @example
-   * ```typescript
-   * // Single event
-   * { target: 'https://example.com', event: 'timer.start' }
-   * // Multiple events
-   * { target: 'https://example.com', event: 'timer.start,timer.stop' }
-   * // Using helper
-   * { target: 'https://example.com', event: combineWebhookEvents('timer.start', 'timer.stop') }
-   * ```
-   */
   event: string;
 }
 
 export interface WebhookUpdateRequest {
   target?: string;
-  /**
-   * Event type(s) that trigger this webhook.
-   * Can be a single event (e.g., 'timer.start') or multiple comma-separated events (e.g., 'timer.start,timer.stop')
-   * @see WebhookEventType for valid event types
-   * @see combineWebhookEvents helper function to combine multiple events
-   */
   event?: string;
 }
 
 export interface WebhookListParams extends ListParams {
   sort?: 'created' | 'lastUpdate' | 'target' | 'event';
   order?: 'asc' | 'desc';
-  /**
-   * Filter by event type.
-   * Can be a single event or comma-separated events.
-   */
   event?: string;
 }
