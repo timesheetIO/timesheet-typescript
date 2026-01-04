@@ -12,7 +12,7 @@ The official TypeScript SDK for the [Timesheet API](https://timesheet.io), provi
 
 - ✅ **Type-Safe** - Full TypeScript support with comprehensive types
 - ✅ **Modern Architecture** - Promise-based with async/await support
-- ✅ **Authentication** - Built-in API Key, OAuth2, and OAuth 2.1 (PKCE) support
+- ✅ **Authentication** - Built-in API Key, OAuth2, and OAuth 2.1 (PKCE) with automatic discovery (RFC 8414)
 - ✅ **Error Handling** - Typed exceptions for better error management
 - ✅ **Pagination** - Automatic pagination with async iterators
 - ✅ **Retry Logic** - Configurable retry with exponential backoff
@@ -125,6 +125,79 @@ const auth = await OAuth21Auth.fromAuthorizationCode({
 const client = new TimesheetClient({
   authentication: auth
 });
+```
+
+#### OAuth 2.1 with Endpoint Discovery (RFC 8414)
+
+The SDK supports automatic endpoint discovery from `/.well-known/oauth-authorization-server`, allowing you to dynamically configure OAuth endpoints:
+
+```typescript
+import { OAuth21Auth, OAuthDiscovery, generatePkceCodePair } from '@timesheet/sdk';
+
+// Step 1: Discover OAuth endpoints
+const discovery = new OAuthDiscovery();
+const metadata = await discovery.discover('https://api.timesheet.io');
+
+console.log('Authorization endpoint:', metadata.authorizationServer.authorization_endpoint);
+console.log('Token endpoint:', metadata.authorizationServer.token_endpoint);
+console.log('Supported scopes:', metadata.authorizationServer.scopes_supported);
+
+// Step 2: Generate PKCE and build authorization URL using discovered endpoints
+const pkce = generatePkceCodePair();
+
+const authUrl = OAuth21Auth.buildAuthorizationUrl({
+  clientId: 'your-client-id',
+  redirectUri: 'https://your-app.com/callback',
+  codeChallenge: pkce.codeChallenge,
+  codeChallengeMethod: pkce.codeChallengeMethod,
+  scope: 'read write',
+  state: 'random-csrf-state',
+  authorizationEndpoint: metadata.authorizationServer.authorization_endpoint,
+});
+
+// Store pkce.codeVerifier and token endpoint securely, then redirect user
+sessionStorage.setItem('pkce_verifier', pkce.codeVerifier);
+sessionStorage.setItem('token_endpoint', metadata.authorizationServer.token_endpoint);
+
+// Step 3: After callback, exchange code using discovered token endpoint
+const auth = await OAuth21Auth.fromAuthorizationCode({
+  clientId: 'your-client-id',
+  authorizationCode: codeFromCallback,
+  redirectUri: 'https://your-app.com/callback',
+  codeVerifier: sessionStorage.getItem('pkce_verifier'),
+  tokenEndpoint: sessionStorage.getItem('token_endpoint'),
+});
+
+const client = new TimesheetClient({
+  authentication: auth
+});
+```
+
+The `OAuthDiscovery` class provides caching and additional discovery options:
+
+```typescript
+import { OAuthDiscovery, discoverOAuth } from '@timesheet/sdk';
+
+// Using convenience function (uses shared cached instance)
+const result = await discoverOAuth('https://api.timesheet.io');
+
+// Using class with custom options
+const discovery = new OAuthDiscovery({
+  cacheTtl: 3600000,           // Cache for 1 hour (default)
+  timeout: 10000,              // Request timeout in ms
+  fetchOpenIdConfig: true,      // Also fetch OpenID Connect config
+  fetchProtectedResource: true, // Also fetch protected resource metadata (RFC 9728)
+});
+
+const metadata = await discovery.discover('https://api.timesheet.io');
+
+// Check cache status
+if (discovery.isCached('https://api.timesheet.io')) {
+  console.log('Using cached metadata');
+}
+
+// Clear cache when needed
+discovery.clearCache();
 ```
 
 #### Using OAuth 2.1 with existing tokens

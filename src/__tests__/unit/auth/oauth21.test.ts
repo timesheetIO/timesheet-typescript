@@ -433,4 +433,67 @@ describe('OAuth21Auth', () => {
       expect(auth.needsRefresh()).toBe(true);
     });
   });
+
+  describe('custom endpoints', () => {
+    test('should use custom token endpoint in fromAuthorizationCode', async () => {
+      mockedAxiosPost.mockResolvedValueOnce({
+        data: {
+          access_token: 'new-access-token',
+          token_type: 'Bearer',
+        },
+      });
+
+      const codeVerifier = generateCodeVerifier();
+
+      await OAuth21Auth.fromAuthorizationCode({
+        clientId: 'test-client-id',
+        authorizationCode: 'auth-code-123',
+        redirectUri: 'https://example.com/callback',
+        codeVerifier,
+        tokenEndpoint: 'https://custom.server.com/oauth/token',
+      });
+
+      expect(mockedAxiosPost).toHaveBeenCalledWith(
+        'https://custom.server.com/oauth/token',
+        expect.any(URLSearchParams),
+        expect.any(Object),
+      );
+    });
+
+    test('should use custom authorization endpoint in buildAuthorizationUrl', () => {
+      const pkce = generatePkceCodePair();
+
+      const url = OAuth21Auth.buildAuthorizationUrl({
+        clientId: 'test-client-id',
+        redirectUri: 'https://example.com/callback',
+        codeChallenge: pkce.codeChallenge,
+        authorizationEndpoint: 'https://custom.server.com/oauth/authorize',
+      });
+
+      expect(url).toContain('https://custom.server.com/oauth/authorize?');
+    });
+
+    test('should use custom token endpoint for refresh', async () => {
+      mockedAxiosPost.mockResolvedValueOnce({
+        data: {
+          access_token: 'new-access-token',
+          token_type: 'Bearer',
+        },
+      });
+
+      const auth = new OAuth21Auth({
+        clientId: 'test-client-id',
+        refreshToken: 'test-refresh-token',
+        tokenEndpoint: 'https://custom.server.com/oauth/token',
+      });
+
+      await auth.refresh();
+
+      expect(mockedAxiosPost).toHaveBeenCalledWith(
+        'https://custom.server.com/oauth/token',
+        expect.any(URLSearchParams),
+        expect.any(Object),
+      );
+    });
+  });
 });

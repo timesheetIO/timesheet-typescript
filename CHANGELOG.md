@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PKCE utilities: `generatePkceCodePair()`, `generateCodeVerifier()`, `generateCodeChallenge()`
 - Support for public clients (optional client secret with PKCE)
 - Resource indicators support (RFC 8707)
+- OAuth 2.1 Discovery support (RFC 8414):
+  - `OAuthDiscovery` class for endpoint discovery from `/.well-known/oauth-authorization-server`
+  - Support for Protected Resource Metadata (RFC 9728)
+  - Support for OpenID Connect Discovery (`/.well-known/openid-configuration`)
+  - Discovery result caching with configurable TTL
+  - `discoverOAuth()` convenience function for quick discovery
+  - Custom `authorizationEndpoint` and `tokenEndpoint` options in OAuth21Auth methods
 - Reports API integration (`reports.timesheet.io`) with full model support:
   - `DocumentReportResource` - Document PDF/XML generation
   - `TaskReportResource` - Task report generation

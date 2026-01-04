@@ -27,6 +27,8 @@ export interface AuthorizationUrlOptions {
   scope?: string;
   /** Optional resource indicator (RFC 8707) */
   resource?: string;
+  /** Custom authorization endpoint URL (overrides default) */
+  authorizationEndpoint?: string;
 }
 
 /**
@@ -45,6 +47,8 @@ export interface TokenExchangeOptions {
   codeVerifier: string;
   /** Optional resource indicator (RFC 8707) */
   resource?: string;
+  /** Custom token endpoint URL (overrides default) */
+  tokenEndpoint?: string;
 }
 
 /**
@@ -59,6 +63,8 @@ export interface OAuth21RefreshOptions {
   refreshToken: string;
   /** Optional resource indicator (RFC 8707) */
   resource?: string;
+  /** Custom token endpoint URL (overrides default) */
+  tokenEndpoint?: string;
 }
 
 /**
@@ -114,14 +120,15 @@ interface TokenResponse {
  * ```
  */
 export class OAuth21Auth implements Authentication {
-  private static readonly TOKEN_ENDPOINT = 'https://api.timesheet.io/oauth2/token';
-  private static readonly AUTH_ENDPOINT = 'https://api.timesheet.io/oauth2/auth';
+  private static readonly DEFAULT_TOKEN_ENDPOINT = 'https://api.timesheet.io/oauth2/token';
+  private static readonly DEFAULT_AUTH_ENDPOINT = 'https://api.timesheet.io/oauth2/auth';
 
   private accessToken: string;
   private refreshToken?: string;
   private readonly clientId?: string;
   private readonly clientSecret?: string;
   private readonly resource?: string;
+  private readonly tokenEndpoint: string;
   private tokenExpiry?: Date;
   private refreshPromise?: Promise<void>;
 
@@ -144,6 +151,7 @@ export class OAuth21Auth implements Authentication {
     if (typeof accessTokenOrOptions === 'string') {
       // Simple bearer token
       this.accessToken = accessTokenOrOptions;
+      this.tokenEndpoint = OAuth21Auth.DEFAULT_TOKEN_ENDPOINT;
       this.parseTokenExpiry();
     } else {
       // OAuth 2.1 with refresh
@@ -152,6 +160,7 @@ export class OAuth21Auth implements Authentication {
       this.clientSecret = options.clientSecret;
       this.refreshToken = options.refreshToken;
       this.resource = options.resource;
+      this.tokenEndpoint = options.tokenEndpoint ?? OAuth21Auth.DEFAULT_TOKEN_ENDPOINT;
       this.accessToken = ''; // Will be set by refresh()
     }
   }
@@ -213,7 +222,7 @@ export class OAuth21Auth implements Authentication {
         params.append('resource', this.resource);
       }
 
-      const response = await axios.post<TokenResponse>(OAuth21Auth.TOKEN_ENDPOINT, params, {
+      const response = await axios.post<TokenResponse>(this.tokenEndpoint, params, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -251,8 +260,17 @@ export class OAuth21Auth implements Authentication {
    * @throws Error if the code verifier is invalid or token exchange fails
    */
   static async fromAuthorizationCode(options: TokenExchangeOptions): Promise<OAuth21Auth> {
-    const { clientId, clientSecret, authorizationCode, redirectUri, codeVerifier, resource } =
-      options;
+    const {
+      clientId,
+      clientSecret,
+      authorizationCode,
+      redirectUri,
+      codeVerifier,
+      resource,
+      tokenEndpoint,
+    } = options;
+
+    const effectiveTokenEndpoint = tokenEndpoint ?? OAuth21Auth.DEFAULT_TOKEN_ENDPOINT;
 
     // Validate code verifier
     if (!isValidCodeVerifier(codeVerifier)) {
@@ -280,7 +298,7 @@ export class OAuth21Auth implements Authentication {
         params.append('resource', resource);
       }
 
-      const response = await axios.post<TokenResponse>(OAuth21Auth.TOKEN_ENDPOINT, params, {
+      const response = await axios.post<TokenResponse>(effectiveTokenEndpoint, params, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -295,6 +313,7 @@ export class OAuth21Auth implements Authentication {
           clientSecret,
           refreshToken,
           resource,
+          tokenEndpoint: effectiveTokenEndpoint,
         });
       } else {
         return new OAuth21Auth(accessToken);
@@ -320,7 +339,10 @@ export class OAuth21Auth implements Authentication {
       state,
       scope,
       resource,
+      authorizationEndpoint,
     } = options;
+
+    const effectiveAuthEndpoint = authorizationEndpoint ?? OAuth21Auth.DEFAULT_AUTH_ENDPOINT;
 
     const params = new URLSearchParams({
       response_type: 'code',
@@ -342,7 +364,7 @@ export class OAuth21Auth implements Authentication {
       params.append('resource', resource);
     }
 
-    return `${OAuth21Auth.AUTH_ENDPOINT}?${params.toString()}`;
+    return `${effectiveAuthEndpoint}?${params.toString()}`;
   }
 
   /**
