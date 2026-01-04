@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.4] - 2026-01-04
+
+### Added
+- OAuth 2.1 Discovery support (RFC 8414):
+  - `OAuthDiscovery` class for endpoint discovery from `/.well-known/oauth-authorization-server`
+  - Support for Protected Resource Metadata (RFC 9728)
+  - Support for OpenID Connect Discovery (`/.well-known/openid-configuration`)
+  - Discovery result caching with configurable TTL
+  - `discoverOAuth()` convenience function for quick discovery
+  - Custom `authorizationEndpoint` and `tokenEndpoint` options in OAuth21Auth methods
+
 ## [1.0.3] - 2026-01-04
 
 ### Added
@@ -14,13 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PKCE utilities: `generatePkceCodePair()`, `generateCodeVerifier()`, `generateCodeChallenge()`
 - Support for public clients (optional client secret with PKCE)
 - Resource indicators support (RFC 8707)
-- OAuth 2.1 Discovery support (RFC 8414):
-  - `OAuthDiscovery` class for endpoint discovery from `/.well-known/oauth-authorization-server`
-  - Support for Protected Resource Metadata (RFC 9728)
-  - Support for OpenID Connect Discovery (`/.well-known/openid-configuration`)
-  - Discovery result caching with configurable TTL
-  - `discoverOAuth()` convenience function for quick discovery
-  - Custom `authorizationEndpoint` and `tokenEndpoint` options in OAuth21Auth methods
 - Reports API integration (`reports.timesheet.io`) with full model support:
   - `DocumentReportResource` - Document PDF/XML generation
   - `TaskReportResource` - Task report generation
@@ -96,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed complex mocking in favor of simple validation tests
 - Updated GitHub Actions to use non-deprecated action versions
 
-[Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.0...v1.0.1
