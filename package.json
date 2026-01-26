@@ -12,7 +12,10 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "rm -rf dist && npm run build:cjs && npm run build:esm && npm run build:types",
+    "build:cjs": "esbuild src/index.ts --bundle --platform=node --target=es2020 --outfile=dist/index.js --sourcemap --minify --external:axios --external:dayjs --external:jsonwebtoken",
+    "build:esm": "esbuild src/index.ts --bundle --platform=node --target=es2020 --format=esm --outfile=dist/index.mjs --sourcemap --minify --external:axios --external:dayjs --external:jsonwebtoken",
+    "build:types": "tsc --emitDeclarationOnly --declaration --outDir dist",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -61,6 +64,7 @@
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
     "dotenv": "^16.5.0",
+    "esbuild": "^0.27.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.2",
@@ -68,26 +72,11 @@
     "nock": "^14.0.5",
     "prettier": "^3.1.1",
     "ts-jest": "^29.1.1",
-    "tsup": "^8.0.1",
     "typedoc": "^0.25.6",
     "typescript": "^5.3.3"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "tsup": {
-    "entry": [
-      "src/index.ts"
-    ],
-    "format": [
-      "cjs",
-      "esm"
-    ],
-    "dts": true,
-    "splitting": false,
-    "sourcemap": true,
-    "clean": true,
-    "minify": true
   }
 }
