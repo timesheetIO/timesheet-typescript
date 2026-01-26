@@ -57,3 +57,21 @@ export interface ExpenseListParams extends ListParams {
   projectIds?: string[];
   taskIds?: string[];
 }
+
+/**
+ * File upload options for expenses
+ */
+export interface ExpenseFileUpload {
+  /** The file to upload (File object in browser, or Blob/Buffer in Node.js) */
+  file: File | Blob;
+  /** Optional custom filename */
+  fileName?: string;
+}
+
+/**
+ * Request to create an expense with a file attachment
+ */
+export interface ExpenseCreateWithFileRequest extends ExpenseCreateRequest {
+  /** File to attach to the expense */
+  file?: ExpenseFileUpload;
+}

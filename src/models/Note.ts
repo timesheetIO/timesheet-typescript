@@ -43,3 +43,21 @@ export interface NoteListParams extends ListParams {
   documentId?: string;
   taskIds?: string[];
 }
+
+/**
+ * File upload options for notes
+ */
+export interface NoteFileUpload {
+  /** The file to upload (File object in browser, or Blob/Buffer in Node.js) */
+  file: File | Blob;
+  /** Optional custom filename */
+  fileName?: string;
+}
+
+/**
+ * Request to create a note with a file attachment
+ */
+export interface NoteCreateWithFileRequest extends NoteCreateRequest {
+  /** File to attach to the note */
+  file?: NoteFileUpload;
+}

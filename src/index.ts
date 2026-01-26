@@ -7,6 +7,7 @@ import type { AxiosInstance } from 'axios';
 import {
   AutomationResource,
   DocumentResource,
+  EventResource,
   ExpenseResource,
   NoteResource,
   OrganizationResource,
@@ -69,6 +70,7 @@ export class TimesheetClient {
   public readonly timer: TimerResource;
   public readonly todos: TodoResource;
   public readonly webhooks: WebhookResource;
+  public readonly events: EventResource;
 
   /**
    * Reports API for PDF generation, exports, and report data.
@@ -137,6 +139,7 @@ export class TimesheetClient {
     this.timer = new TimerResource(this.apiClient);
     this.todos = new TodoResource(this.apiClient);
     this.webhooks = new WebhookResource(this.apiClient);
+    this.events = new EventResource(this.apiClient);
 
     // Initialize reports API resources
     this.reports = new ReportsClient(this.reportsApiClient);

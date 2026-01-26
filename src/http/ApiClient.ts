@@ -160,9 +160,43 @@ export class ApiClient {
   }
 
   /**
+   * POST multipart/form-data request for file uploads.
+   * @param path API endpoint path
+   * @param formData FormData containing file and optional JSON data
+   */
+  async postMultipart<T>(path: string, formData: FormData): Promise<T> {
+    return this.request<T>({
+      method: 'POST',
+      url: path,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
+
+  /**
    * Sleep for the specified number of milliseconds.
    */
   private sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Get the base URL for the API.
+   */
+  getBaseUrl(): string {
+    return this.config.baseUrl;
+  }
+
+  /**
+   * Get authentication headers for SSE connections.
+   * @returns Promise resolving to auth headers or undefined
+   */
+  async getAuthHeaders(): Promise<Record<string, string> | undefined> {
+    if (this.config.authentication) {
+      return this.config.authentication.getAuthHeaders();
+    }
+    return undefined;
   }
 }

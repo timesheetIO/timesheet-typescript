@@ -16,6 +16,8 @@ export { DocumentResource } from './DocumentResource';
 export { TimerResource } from './TimerResource';
 export { TodoResource } from './TodoResource';
 export { WebhookResource } from './WebhookResource';
+export { EventResource } from './EventResource';
+export type { SubscribeOptions } from './EventResource';
 
 // Export reports resources
 export * from './reports';
