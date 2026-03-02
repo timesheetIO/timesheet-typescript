@@ -1,0 +1,29 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Timesheet TypeScript SDK",
+  "entryPoints": ["./src/index.ts"],
+  "out": "./docs",
+  "theme": "default",
+  "readme": "./README.md",
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "gitRevision": "main",
+  "githubPages": true,
+  "plugin": [],
+  "exclude": [
+    "**/__tests__/**/*",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "externalPattern": ["node_modules/**"],
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "hideGenerator": true,
+  "navigationLinks": {
+    "GitHub": "https://github.com/timesheetIO/timesheet-typescript",
+    "API Docs": "https://timesheet.io/api/docs",
+    "npm": "https://www.npmjs.com/package/@timesheet/sdk"
+  }
+} 
