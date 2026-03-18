@@ -3,6 +3,10 @@ import type {
   Organization,
   OrganizationCreateRequest,
   OrganizationListParams,
+  OrganizationMember,
+  OrganizationMemberCreateRequest,
+  OrganizationMemberListParams,
+  OrganizationMemberUpdateRequest,
   OrganizationUpdateRequest,
   Page,
 } from '../models';
@@ -10,7 +14,7 @@ import { NavigablePage } from '../models';
 import { Resource } from './Resource';
 
 /**
- * Resource for managing organizations.
+ * Resource for managing organizations and their members.
  */
 export class OrganizationResource extends Resource {
   constructor(client: ApiClient) {
@@ -48,5 +52,72 @@ export class OrganizationResource extends Resource {
   async search(params: OrganizationListParams): Promise<NavigablePage<Organization>> {
     const response = await this.http.post<Page<Organization>>(`${this.basePath}/search`, params);
     return this.createNavigablePage(response, (page) => this.search({ ...params, page }));
+  }
+
+  /**
+   * List members of an organization
+   */
+  async listMembers(
+    organizationId: string,
+    params?: OrganizationMemberListParams,
+  ): Promise<NavigablePage<OrganizationMember>> {
+    const response = await this.http.post<Page<OrganizationMember>>(
+      `${this.basePath}/${encodeURIComponent(organizationId)}/members/list`,
+      params,
+    );
+    return this.createNavigablePage(response, (page) =>
+      this.listMembers(organizationId, { ...params, page }),
+    );
+  }
+
+  /**
+   * Get a specific member of an organization
+   */
+  async getMember(
+    organizationId: string,
+    permissionId: string,
+  ): Promise<OrganizationMember> {
+    return this.http.get<OrganizationMember>(
+      `${this.basePath}/${encodeURIComponent(organizationId)}/members/${encodeURIComponent(permissionId)}`,
+    );
+  }
+
+  /**
+   * Add a member to an organization
+   */
+  async addMember(
+    organizationId: string,
+    data: OrganizationMemberCreateRequest,
+  ): Promise<OrganizationMember> {
+    return this.http.post<OrganizationMember>(
+      `${this.basePath}/${encodeURIComponent(organizationId)}/members`,
+      data,
+    );
+  }
+
+  /**
+   * Update a member's permissions in an organization
+   */
+  async updateMember(
+    organizationId: string,
+    permissionId: string,
+    data: OrganizationMemberUpdateRequest,
+  ): Promise<OrganizationMember> {
+    return this.http.put<OrganizationMember>(
+      `${this.basePath}/${encodeURIComponent(organizationId)}/members/${encodeURIComponent(permissionId)}`,
+      data,
+    );
+  }
+
+  /**
+   * Remove a member from an organization
+   */
+  async removeMember(
+    organizationId: string,
+    permissionId: string,
+  ): Promise<void> {
+    return this.http.delete(
+      `${this.basePath}/${encodeURIComponent(organizationId)}/members/${encodeURIComponent(permissionId)}`,
+    );
   }
 }

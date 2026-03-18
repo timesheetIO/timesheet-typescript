@@ -15,6 +15,10 @@ describe('TimesheetClient', () => {
       expect(client.timer).toBeDefined();
       expect(client.teams).toBeDefined();
       expect(client.organizations).toBeDefined();
+      expect(client.absences).toBeDefined();
+      expect(client.absenceTypes).toBeDefined();
+      expect(client.contracts).toBeDefined();
+      expect(client.contractTemplates).toBeDefined();
     });
 
     test('should create client with OAuth2 token', () => {

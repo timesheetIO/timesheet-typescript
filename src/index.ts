@@ -5,7 +5,11 @@ import type { ClientConfig } from './config';
 import { RetryConfig } from './config';
 import type { AxiosInstance } from 'axios';
 import {
+  AbsenceResource,
+  AbsenceTypeResource,
   AutomationResource,
+  ContractResource,
+  ContractTemplateResource,
   DocumentResource,
   EventResource,
   ExpenseResource,
@@ -71,6 +75,10 @@ export class TimesheetClient {
   public readonly todos: TodoResource;
   public readonly webhooks: WebhookResource;
   public readonly events: EventResource;
+  public readonly absences: AbsenceResource;
+  public readonly absenceTypes: AbsenceTypeResource;
+  public readonly contracts: ContractResource;
+  public readonly contractTemplates: ContractTemplateResource;
 
   /**
    * Reports API for PDF generation, exports, and report data.
@@ -140,6 +148,10 @@ export class TimesheetClient {
     this.todos = new TodoResource(this.apiClient);
     this.webhooks = new WebhookResource(this.apiClient);
     this.events = new EventResource(this.apiClient);
+    this.absences = new AbsenceResource(this.apiClient);
+    this.absenceTypes = new AbsenceTypeResource(this.apiClient);
+    this.contracts = new ContractResource(this.apiClient);
+    this.contractTemplates = new ContractTemplateResource(this.apiClient);
 
     // Initialize reports API resources
     this.reports = new ReportsClient(this.reportsApiClient);

@@ -18,3 +18,5 @@ export * from './Settings';
 export * from './Profile';
 export * from './Reports';
 export * from './Event';
+export * from './Absence';
+export * from './Contract';

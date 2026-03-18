@@ -18,6 +18,10 @@ export { TodoResource } from './TodoResource';
 export { WebhookResource } from './WebhookResource';
 export { EventResource } from './EventResource';
 export type { SubscribeOptions } from './EventResource';
+export { AbsenceResource } from './AbsenceResource';
+export { AbsenceTypeResource } from './AbsenceTypeResource';
+export { ContractResource } from './ContractResource';
+export { ContractTemplateResource } from './ContractTemplateResource';
 
 // Export reports resources
 export * from './reports';
