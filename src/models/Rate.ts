@@ -8,8 +8,8 @@ export interface Rate {
   created?: number;
   deleted?: boolean;
   title: string;
-  factor: number;
-  extra?: number;
+  factor: string;
+  extra?: string;
   enabled?: boolean;
   archived?: boolean;
   team?: Team;
@@ -22,8 +22,8 @@ export interface RateList {
 
 export interface RateCreateRequest {
   title: string;
-  factor: number;
-  extra?: number;
+  factor: string;
+  extra?: string;
   enabled?: boolean;
   archived?: boolean;
   teamId?: string;
@@ -31,8 +31,8 @@ export interface RateCreateRequest {
 
 export interface RateUpdateRequest {
   title?: string;
-  factor?: number;
-  extra?: number;
+  factor?: string;
+  extra?: string;
   enabled?: boolean;
   archived?: boolean;
   deleted?: boolean;

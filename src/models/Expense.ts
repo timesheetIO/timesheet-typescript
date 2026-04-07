@@ -9,7 +9,7 @@ export interface Expense {
   created?: number;
   description?: string;
   dateTime?: string;
-  amount?: number;
+  amount?: string;
   refunded?: boolean;
   fileUri?: string;
   fileName?: string;
@@ -26,7 +26,7 @@ export interface ExpenseList {
 export interface ExpenseCreateRequest {
   description?: string;
   dateTime: string;
-  amount?: number;
+  amount?: string;
   refunded?: boolean;
   fileUri?: string;
   fileName?: string;
@@ -36,7 +36,7 @@ export interface ExpenseCreateRequest {
 export interface ExpenseUpdateRequest {
   description?: string;
   dateTime?: string;
-  amount?: number;
+  amount?: string;
   refunded?: boolean;
   deleted?: boolean;
   fileUri?: string;

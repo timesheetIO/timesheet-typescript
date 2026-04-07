@@ -6,16 +6,14 @@ import type { ListParams, Member } from './common';
 export interface Absence {
   id: string;
   contractId: string;
-  userId: string;
   member?: Member;
   absenceTypeId: string;
   absenceType?: AbsenceType;
-  startDate: string;
-  endDate: string;
-  startHalfDay?: boolean;
-  endHalfDay?: boolean;
-  totalDays?: number;
-  totalHours?: number;
+  startDateTime: string;
+  endDateTime: string;
+  fullDay?: boolean;
+  totalDays?: string;
+  totalHours?: string;
   reason?: string;
   documentationUrl?: string;
   status?: string;
@@ -41,10 +39,9 @@ export interface Absence {
 export interface AbsenceCreateRequest {
   contractId: string;
   absenceTypeId: string;
-  startDate: string;
-  endDate: string;
-  startHalfDay?: boolean;
-  endHalfDay?: boolean;
+  startDateTime: string;
+  endDateTime: string;
+  fullDay?: boolean;
   reason?: string;
   documentationUrl?: string;
 }
@@ -53,10 +50,9 @@ export interface AbsenceCreateRequest {
  * Update absence request
  */
 export interface AbsenceUpdateRequest {
-  startDate?: string;
-  endDate?: string;
-  startHalfDay?: boolean;
-  endHalfDay?: boolean;
+  startDateTime?: string;
+  endDateTime?: string;
+  fullDay?: boolean;
   reason?: string;
   documentationUrl?: string;
 }
@@ -77,8 +73,8 @@ export interface AbsenceListParams extends ListParams {
   userId?: string;
   absenceTypeId?: string;
   status?: string;
-  startDate?: string;
-  endDate?: string;
+  startDateTime?: string;
+  endDateTime?: string;
   userIds?: string[];
   contractIds?: string[];
   statuses?: string[];

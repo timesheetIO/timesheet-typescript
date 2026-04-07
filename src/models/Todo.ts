@@ -13,11 +13,11 @@ export interface Todo {
   estimatedMinutes?: number;
   duration?: number;
   durationBreak?: number;
-  salaryTotal?: number;
-  salaryBreak?: number;
-  expenses?: number;
-  expensesPaid?: number;
-  mileage?: number;
+  salaryTotal?: string;
+  salaryBreak?: string;
+  expenses?: string;
+  expensesPaid?: string;
+  mileage?: string;
   user?: string;
   deleted?: boolean;
   created?: number;

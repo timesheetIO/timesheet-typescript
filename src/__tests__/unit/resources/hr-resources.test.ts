@@ -61,7 +61,7 @@ describe('HR Resources', () => {
     });
 
     test('list should pass params', async () => {
-      const params = { status: 'pending', startDate: '2026-01-01' };
+      const params = { status: 'pending', startDateTime: '2026-01-01' };
       await resource.list(orgId, params);
       expect(mockClient.get).toHaveBeenCalledWith(
         `/v1/organizations/${orgId}/absences`,
@@ -83,8 +83,8 @@ describe('HR Resources', () => {
       const data = {
         contractId: 'contract-1',
         absenceTypeId: 'type-1',
-        startDate: '2026-03-20',
-        endDate: '2026-03-22',
+        startDateTime: '2026-03-20',
+        endDateTime: '2026-03-22',
       };
       await resource.create(orgId, data);
       expect(mockClient.post).toHaveBeenCalledWith(

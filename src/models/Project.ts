@@ -12,7 +12,7 @@ export interface Project {
   taskDefaultRateId?: string;
   archived?: boolean;
   salaryVisibility?: number;
-  salary?: number;
+  salary?: string;
   team?: Team;
   permission?: {
     role: string;
@@ -23,13 +23,14 @@ export interface Project {
   };
   duration?: number;
   durationBreak?: number;
-  salaryTotal?: number;
-  salaryBreak?: number;
-  expenses?: number;
-  expensesPaid?: number;
-  mileage?: number;
-  titleAndClient?: string;
-  salaryVisible?: boolean;
+  salaryTotal?: string;
+  salaryBreak?: string;
+  expenses?: string;
+  expensesPaid?: string;
+  mileage?: string;
+  todoEstimatedDuration?: number;
+  todoTrackedDuration?: number;
+  todoCount?: number;
   user?: string;
   created?: number;
   lastUpdate?: number;
@@ -72,7 +73,7 @@ export interface ProjectCreateRequest {
   taskDefaultRateId?: string;
   archived?: boolean;
   salaryVisibility?: number;
-  salary?: number;
+  salary?: string;
   teamId?: string;
 }
 
@@ -86,7 +87,7 @@ export interface ProjectUpdateRequest {
   taskDefaultRateId?: string;
   archived?: boolean;
   salaryVisibility?: number;
-  salary?: number;
+  salary?: string;
   deleted?: boolean;
 }
 

@@ -27,7 +27,7 @@ export interface Task {
   paid?: boolean;
   billed?: boolean;
   phoneNumber?: string;
-  distance?: number;
+  distance?: string;
   signature?: string;
   project?: Project;
   todo?: Todo;
@@ -40,11 +40,11 @@ export interface Task {
   notes?: Note[];
   duration?: number;
   durationBreak?: number;
-  salaryTotal?: number;
-  salaryBreak?: number;
-  expensesTotal?: number;
-  expensesPaid?: number;
-  mileage?: number;
+  salaryTotal?: string;
+  salaryBreak?: string;
+  expensesTotal?: string;
+  expensesPaid?: string;
+  mileage?: string;
   notesTotal?: number;
   salaryVisible?: boolean;
   user?: string;
@@ -65,18 +65,18 @@ export interface TaskList {
 export interface TaskStatistic {
   duration: number;
   durationBreak: number;
-  salaryTotal: number;
-  salaryBreak: number;
-  expensesTotal: number;
-  expensesPaid: number;
-  mileage: number;
+  salaryTotal: string;
+  salaryBreak: string;
+  expensesTotal: string;
+  expensesPaid: string;
+  mileage: string;
 }
 
 export interface TaskPerformance {
   startDateTime: string;
   endDateTime: string;
   duration: number;
-  salaryTotal: number;
+  salaryTotal: string;
 }
 
 export interface TaskCreateRequest {

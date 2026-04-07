@@ -2,6 +2,7 @@ import type { Task } from './Task';
 import type { Pause } from './Pause';
 
 export interface Timer {
+  id?: string;
   status: 'running' | 'paused' | 'stopped';
   user?: string;
   task?: Task;
