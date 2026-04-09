@@ -62,7 +62,6 @@ export interface TeamUpdateRequest {
 }
 
 export interface TeamListParams extends ListParams {
-  statistics?: boolean;
   sort?: 'alpha' | 'permission' | 'created';
   order?: 'asc' | 'desc';
   organizationId?: string;

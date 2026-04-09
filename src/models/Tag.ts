@@ -31,7 +31,6 @@ export interface TagListParams extends PageParams {
   teamId?: string;
   projectId?: string;
   status?: 'all' | 'active' | 'inactive';
-  statistics?: boolean;
   sort?: 'alpha' | 'status' | 'created';
   order?: 'asc' | 'desc';
 }
