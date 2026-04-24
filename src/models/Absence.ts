@@ -79,6 +79,7 @@ export interface AbsenceListParams extends ListParams {
   contractIds?: string[];
   statuses?: string[];
   teamId?: string;
+  teamIds?: string[];
   excludeRejectedCancelled?: boolean;
 }
 
