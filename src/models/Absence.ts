@@ -75,6 +75,7 @@ export interface AbsenceListParams extends ListParams {
   status?: string;
   startDateTime?: string;
   endDateTime?: string;
+  year?: number;
   userIds?: string[];
   contractIds?: string[];
   statuses?: string[];
