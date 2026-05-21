@@ -29,8 +29,8 @@ export interface NoteCreateRequest {
 }
 
 export interface NoteUpdateRequest {
-  text: string;
-  dateTime: string;
+  text?: string;
+  dateTime?: string;
   uri?: string;
   driveId?: string;
   deleted?: boolean;
@@ -41,6 +41,7 @@ export interface NoteListParams extends ListParams {
   endDate?: string;
   taskId?: string;
   documentId?: string;
+  organizationId?: string;
   taskIds?: string[];
 }
 

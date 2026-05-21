@@ -4,6 +4,9 @@ import type { Pause } from './Pause';
 export interface Timer {
   id?: string;
   status: 'running' | 'paused' | 'stopped';
+  running?: boolean;
+  paused?: boolean;
+  stopped?: boolean;
   user?: string;
   task?: Task;
   pause?: Pause;

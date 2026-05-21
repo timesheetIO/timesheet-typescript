@@ -10,8 +10,11 @@ export class TodoResource extends Resource {
   }
 
   async list(params?: TodoListParams): Promise<NavigablePage<Todo>> {
-    const response = await this.http.get<Page<Todo>, TodoListParams>(this.basePath, params);
-    return new NavigablePage(response, (page) => this.list({ ...params, page }));
+    // GET /v1/todos returns a bare array, not a paged object.
+    const items = await this.http.get<Todo[], TodoListParams>(this.basePath, params);
+    return new NavigablePage({ items: items ?? [], params: params ?? {} }, (page) =>
+      this.list({ ...params, page }),
+    );
   }
 
   async create(data: TodoCreateRequest): Promise<Todo> {

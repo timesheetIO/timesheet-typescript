@@ -1,14 +1,12 @@
 import type { ApiClient } from '../http';
 import type {
   Contract,
-  ContractAmendment,
-  ContractAmendmentCreateRequest,
   ContractCreateRequest,
   ContractListParams,
   ContractUpdateRequest,
   Page,
 } from '../models';
-import { NavigablePage } from '../models';
+import type { NavigablePage } from '../models';
 import { Resource } from './Resource';
 
 /**
@@ -41,16 +39,10 @@ export class ContractResource extends Resource {
   }
 
   async get(organizationId: string, id: string): Promise<Contract> {
-    return this.http.get<Contract>(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
-    );
+    return this.http.get<Contract>(`${this.orgPath(organizationId)}/${encodeURIComponent(id)}`);
   }
 
-  async update(
-    organizationId: string,
-    id: string,
-    data: ContractUpdateRequest,
-  ): Promise<Contract> {
+  async update(organizationId: string, id: string, data: ContractUpdateRequest): Promise<Contract> {
     return this.http.put<Contract>(
       `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
       data,
@@ -58,35 +50,7 @@ export class ContractResource extends Resource {
   }
 
   async delete(organizationId: string, id: string): Promise<void> {
-    return this.http.delete(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
-    );
-  }
-
-  /**
-   * List amendments for a contract
-   */
-  async listAmendments(
-    organizationId: string,
-    contractId: string,
-  ): Promise<ContractAmendment[]> {
-    return this.http.get<ContractAmendment[]>(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(contractId)}/amendments`,
-    );
-  }
-
-  /**
-   * Create an amendment for a contract
-   */
-  async createAmendment(
-    organizationId: string,
-    contractId: string,
-    data: ContractAmendmentCreateRequest,
-  ): Promise<ContractAmendment> {
-    return this.http.post<ContractAmendment>(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(contractId)}/amendments`,
-      data,
-    );
+    return this.http.delete(`${this.orgPath(organizationId)}/${encodeURIComponent(id)}`);
   }
 
   /**

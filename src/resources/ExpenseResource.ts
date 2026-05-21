@@ -58,12 +58,11 @@ export class ExpenseResource extends Resource {
 
   /**
    * Update expense status
-   * @param id Expense ID
-   * @param data Status update data
+   * @param data Status update data (must include the expense id)
    * @returns Updated expense
    */
-  async updateStatus(id: string, data: ExpenseStatus): Promise<Expense> {
-    return this.http.put<Expense>(`${this.basePath}/${id}/status`, data);
+  async updateStatus(data: ExpenseStatus): Promise<Expense> {
+    return this.http.put<Expense>(`${this.basePath}/updateStatus`, data);
   }
 
   /**

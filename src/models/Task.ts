@@ -58,8 +58,6 @@ export interface TaskList {
   items: Task[];
   params: TaskListParams;
   taskStatistic?: TaskStatistic;
-  currentPerformance?: TaskPerformance;
-  lastPerformance?: TaskPerformance;
 }
 
 export interface TaskStatistic {
@@ -70,13 +68,6 @@ export interface TaskStatistic {
   expensesTotal: string;
   expensesPaid: string;
   mileage: string;
-}
-
-export interface TaskPerformance {
-  startDateTime: string;
-  endDateTime: string;
-  duration: number;
-  salaryTotal: string;
 }
 
 export interface TaskCreateRequest {
@@ -148,11 +139,11 @@ export interface TaskTimesUpdateRequest {
   /**
    * ISO 8601 date-time with timezone offset (e.g. 2025-05-31T16:45:51+02:00)
    */
-  startDateTime: string;
+  start: string;
   /**
    * ISO 8601 date-time with timezone offset (e.g. 2025-05-31T16:45:51+02:00)
    */
-  endDateTime: string;
+  end: string;
 }
 
 export interface TaskListParams extends PageParams {
@@ -176,7 +167,7 @@ export interface TaskListParams extends PageParams {
   populateExpenses?: boolean;
   populateNotes?: boolean;
   populateTags?: boolean;
-  performance?: boolean;
+  excludeTaskIds?: string[];
   startDate?: string;
   endDate?: string;
 }

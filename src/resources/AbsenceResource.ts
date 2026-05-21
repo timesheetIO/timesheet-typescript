@@ -7,7 +7,7 @@ import type {
   AbsenceUpdateRequest,
   Page,
 } from '../models';
-import { NavigablePage } from '../models';
+import type { NavigablePage } from '../models';
 import { Resource } from './Resource';
 
 /**
@@ -24,10 +24,7 @@ export class AbsenceResource extends Resource {
     return `${this.basePath}/${encodeURIComponent(organizationId)}/absences`;
   }
 
-  async list(
-    organizationId: string,
-    params?: AbsenceListParams,
-  ): Promise<NavigablePage<Absence>> {
+  async list(organizationId: string, params?: AbsenceListParams): Promise<NavigablePage<Absence>> {
     const response = await this.http.get<Page<Absence>, AbsenceListParams>(
       this.orgPath(organizationId),
       params,
@@ -37,10 +34,7 @@ export class AbsenceResource extends Resource {
     );
   }
 
-  async search(
-    organizationId: string,
-    params: AbsenceListParams,
-  ): Promise<NavigablePage<Absence>> {
+  async search(organizationId: string, params: AbsenceListParams): Promise<NavigablePage<Absence>> {
     const response = await this.http.post<Page<Absence>>(
       `${this.orgPath(organizationId)}/search`,
       params,
@@ -55,16 +49,10 @@ export class AbsenceResource extends Resource {
   }
 
   async get(organizationId: string, id: string): Promise<Absence> {
-    return this.http.get<Absence>(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
-    );
+    return this.http.get<Absence>(`${this.orgPath(organizationId)}/${encodeURIComponent(id)}`);
   }
 
-  async update(
-    organizationId: string,
-    id: string,
-    data: AbsenceUpdateRequest,
-  ): Promise<Absence> {
+  async update(organizationId: string, id: string, data: AbsenceUpdateRequest): Promise<Absence> {
     return this.http.put<Absence>(
       `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
       data,
@@ -72,9 +60,7 @@ export class AbsenceResource extends Resource {
   }
 
   async delete(organizationId: string, id: string): Promise<void> {
-    return this.http.delete(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
-    );
+    return this.http.delete(`${this.orgPath(organizationId)}/${encodeURIComponent(id)}`);
   }
 
   async approve(organizationId: string, id: string): Promise<Absence> {
@@ -83,22 +69,14 @@ export class AbsenceResource extends Resource {
     );
   }
 
-  async reject(
-    organizationId: string,
-    id: string,
-    data: AbsenceReasonRequest,
-  ): Promise<Absence> {
+  async reject(organizationId: string, id: string, data: AbsenceReasonRequest): Promise<Absence> {
     return this.http.post<Absence>(
       `${this.orgPath(organizationId)}/${encodeURIComponent(id)}/reject`,
       data,
     );
   }
 
-  async cancel(
-    organizationId: string,
-    id: string,
-    data: AbsenceReasonRequest,
-  ): Promise<Absence> {
+  async cancel(organizationId: string, id: string, data: AbsenceReasonRequest): Promise<Absence> {
     return this.http.post<Absence>(
       `${this.orgPath(organizationId)}/${encodeURIComponent(id)}/cancel`,
       data,

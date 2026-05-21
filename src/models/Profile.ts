@@ -4,7 +4,14 @@ export interface Profile {
   imageUrl?: string;
   firstname?: string;
   lastname?: string;
+  language?: string;
+  countryIso?: string;
+  country?: string;
+  ipAddress?: string;
+  referrer?: string;
   newsletter?: boolean;
+  gdprConsent?: boolean;
+  invited?: boolean;
   activatedTeams?: boolean;
   activated?: boolean;
   needsSetup?: boolean;
@@ -20,6 +27,7 @@ export interface Profile {
   expired?: boolean;
   product?: string;
   trial?: boolean;
+  planEnterprise?: boolean;
   planBusiness?: boolean;
   planPro?: boolean;
   planPlus?: boolean;
@@ -27,18 +35,20 @@ export interface Profile {
   member?: boolean;
   personalSubscriptionActive?: boolean;
   organizationSubscriptionActive?: boolean;
+  basic?: boolean;
+  pro?: boolean;
+  plus?: boolean;
 
   // Validation and status fields
   validProfile?: boolean;
   validAndActivated?: boolean;
+  admin?: boolean;
   deleted?: boolean;
+  overtimeAccessible?: boolean;
 
   // Display fields
   displayName?: string;
   initials?: string;
-
-  // Timestamps
-  createdAt?: string;
 }
 
 export interface ProfileUpdateRequest {

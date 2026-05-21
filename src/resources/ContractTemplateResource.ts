@@ -6,7 +6,7 @@ import type {
   ContractTemplateUpdateRequest,
   Page,
 } from '../models';
-import { NavigablePage } from '../models';
+import type { NavigablePage } from '../models';
 import { Resource } from './Resource';
 
 /**
@@ -25,10 +25,10 @@ export class ContractTemplateResource extends Resource {
     organizationId: string,
     params?: ContractTemplateListParams,
   ): Promise<NavigablePage<ContractTemplate>> {
-    const response = await this.http.get<
-      Page<ContractTemplate>,
-      ContractTemplateListParams
-    >(this.orgPath(organizationId), params);
+    const response = await this.http.get<Page<ContractTemplate>, ContractTemplateListParams>(
+      this.orgPath(organizationId),
+      params,
+    );
     return this.createNavigablePage(response, (page) =>
       this.list(organizationId, { ...params, page }),
     );
@@ -59,8 +59,6 @@ export class ContractTemplateResource extends Resource {
   }
 
   async delete(organizationId: string, id: string): Promise<void> {
-    return this.http.delete(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
-    );
+    return this.http.delete(`${this.orgPath(organizationId)}/${encodeURIComponent(id)}`);
   }
 }

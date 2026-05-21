@@ -149,12 +149,18 @@ export class ApiClient {
   }
 
   /**
-   * DELETE request.
+   * DELETE request. Supports an optional request body for endpoints that
+   * accept a payload (e.g. batch deletions).
    */
-  async delete<T, P = Record<string, unknown>>(path: string, params?: P): Promise<T> {
+  async delete<T, P = Record<string, unknown>>(
+    path: string,
+    params?: P,
+    data?: unknown,
+  ): Promise<T> {
     return this.request<T>({
       method: 'DELETE',
       url: path,
+      data,
       params: params as Record<string, unknown>,
     });
   }

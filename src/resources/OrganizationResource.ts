@@ -73,10 +73,7 @@ export class OrganizationResource extends Resource {
   /**
    * Get a specific member of an organization
    */
-  async getMember(
-    organizationId: string,
-    permissionId: string,
-  ): Promise<OrganizationMember> {
+  async getMember(organizationId: string, permissionId: string): Promise<OrganizationMember> {
     return this.http.get<OrganizationMember>(
       `${this.basePath}/${encodeURIComponent(organizationId)}/members/${encodeURIComponent(permissionId)}`,
     );
@@ -112,10 +109,7 @@ export class OrganizationResource extends Resource {
   /**
    * Remove a member from an organization
    */
-  async removeMember(
-    organizationId: string,
-    permissionId: string,
-  ): Promise<void> {
+  async removeMember(organizationId: string, permissionId: string): Promise<void> {
     return this.http.delete(
       `${this.basePath}/${encodeURIComponent(organizationId)}/members/${encodeURIComponent(permissionId)}`,
     );

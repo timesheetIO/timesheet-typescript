@@ -5,6 +5,7 @@ import type {
   Task,
   TaskCreateRequest,
   TaskListParams,
+  TaskStatistic,
   TaskStatusUpdateRequest,
   TaskTimesUpdateRequest,
   TaskUpdateRequest,
@@ -15,6 +16,15 @@ import { Resource } from './Resource';
 export class TaskResource extends Resource {
   constructor(client: ApiClient) {
     super(client, '/v1/tasks');
+  }
+
+  /**
+   * List tasks with pagination and sorting.
+   * @param params Pagination, sorting, and optional organization filter
+   */
+  async list(params?: TaskListParams): Promise<NavigablePage<Task>> {
+    const response = await this.http.get<Page<Task>, TaskListParams>(this.basePath, params);
+    return this.createNavigablePage(response, (page) => this.list({ ...params, page }));
   }
 
   async create(data: TaskCreateRequest): Promise<Task> {
@@ -53,6 +63,15 @@ export class TaskResource extends Resource {
   }
 
   /**
+   * Get aggregated task statistics (duration, salary, expenses, mileage) for
+   * tasks matching the given filter, without returning the individual tasks.
+   * @param params Filter parameters
+   */
+  async statistics(params: TaskListParams): Promise<TaskStatistic> {
+    return this.http.post<TaskStatistic>(`${this.basePath}/statistics`, params);
+  }
+
+  /**
    * Update task status (billable, paid, billed)
    * @param data Status update data
    */
@@ -67,9 +86,23 @@ export class TaskResource extends Resource {
   async updateTimes(data: TaskTimesUpdateRequest): Promise<Task> {
     const formattedData = {
       ...data,
-      startDateTime: DateUtils.formatTimestamp(data.startDateTime),
-      endDateTime: DateUtils.formatTimestamp(data.endDateTime),
+      start: DateUtils.formatTimestamp(data.start),
+      end: DateUtils.formatTimestamp(data.end),
     };
     return this.http.put<Task>(`${this.basePath}/updateTimes`, formattedData);
+  }
+
+  /**
+   * Generate a printable PDF work record for a task, including its details,
+   * times, expenses, and notes.
+   * @param id Task identifier
+   * @returns ArrayBuffer containing the PDF document
+   */
+  async print(id: string): Promise<ArrayBuffer> {
+    return this.http.request<ArrayBuffer>({
+      method: 'GET',
+      url: `${this.basePath}/print/${encodeURIComponent(id)}`,
+      responseType: 'arraybuffer',
+    });
   }
 }

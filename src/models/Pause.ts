@@ -29,8 +29,8 @@ export interface PauseCreateRequest {
 
 export interface PauseUpdateRequest {
   description?: string;
-  startDateTime: string;
-  endDateTime: string;
+  startDateTime?: string;
+  endDateTime?: string;
   deleted?: boolean;
 }
 

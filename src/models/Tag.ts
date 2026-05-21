@@ -1,11 +1,13 @@
 import type { PageParams } from './common';
+import type { Team } from './Team';
 
 export interface Tag {
   id: string;
   name: string;
   color?: number;
-  teamId?: string;
+  team?: Team;
   archived?: boolean;
+  totalTime?: number;
   created?: number;
   lastUpdate?: number;
 }
@@ -19,6 +21,7 @@ export interface TagCreateRequest {
   name: string;
   color?: number;
   teamId?: string;
+  archived?: boolean;
 }
 
 export interface TagUpdateRequest {
@@ -33,4 +36,6 @@ export interface TagListParams extends PageParams {
   status?: 'all' | 'active' | 'inactive';
   sort?: 'alpha' | 'status' | 'created';
   order?: 'asc' | 'desc';
+  tagIds?: string[];
+  empty?: boolean;
 }

@@ -67,6 +67,8 @@ export interface Webhook {
    * @see WebhookEventType for valid event types
    */
   event: string;
+  user?: string;
+  deleted?: boolean;
   created?: number;
   lastUpdate?: number;
 }
@@ -84,6 +86,7 @@ export interface WebhookCreateRequest {
 export interface WebhookUpdateRequest {
   target?: string;
   event?: string;
+  deleted?: boolean;
 }
 
 export interface WebhookListParams extends ListParams {

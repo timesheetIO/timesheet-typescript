@@ -141,8 +141,8 @@ describeIntegration('Tasks Resource Integration Tests', () => {
 
       const timesUpdateData = {
         id: createdTaskId,
-        startDateTime: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        endDateTime: new Date().toISOString(),
+        start: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+        end: new Date().toISOString(),
       };
 
       const updatedTask = await client.tasks.updateTimes(timesUpdateData);
@@ -191,8 +191,8 @@ describeIntegration('Tasks Resource Integration Tests', () => {
       await expect(
         client.tasks.updateTimes({
           id: 'non-existent-task-id',
-          startDateTime: 'invalid-date',
-          endDateTime: 'invalid-date',
+          start: 'invalid-date',
+          end: 'invalid-date',
         }),
       ).rejects.toThrow();
     });

@@ -34,6 +34,11 @@ export interface Activity {
 
 export interface ListParams {
   /**
+   * Free-text search query.
+   */
+  search?: string;
+
+  /**
    * Total count of items across all pages.
    */
   count?: number;
@@ -47,6 +52,11 @@ export interface ListParams {
    * Page size limit.
    */
   limit?: number;
+
+  /**
+   * Result offset.
+   */
+  offset?: number;
 
   /**
    * Sort field.

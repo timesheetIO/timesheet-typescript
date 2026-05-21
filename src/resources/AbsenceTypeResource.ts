@@ -6,7 +6,7 @@ import type {
   AbsenceTypeUpdateRequest,
   Page,
 } from '../models';
-import { NavigablePage } from '../models';
+import type { NavigablePage } from '../models';
 import { Resource } from './Resource';
 
 /**
@@ -34,17 +34,12 @@ export class AbsenceTypeResource extends Resource {
     );
   }
 
-  async create(
-    organizationId: string,
-    data: AbsenceTypeCreateRequest,
-  ): Promise<AbsenceType> {
+  async create(organizationId: string, data: AbsenceTypeCreateRequest): Promise<AbsenceType> {
     return this.http.post<AbsenceType>(this.orgPath(organizationId), data);
   }
 
   async get(organizationId: string, id: string): Promise<AbsenceType> {
-    return this.http.get<AbsenceType>(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
-    );
+    return this.http.get<AbsenceType>(`${this.orgPath(organizationId)}/${encodeURIComponent(id)}`);
   }
 
   async update(
@@ -59,8 +54,6 @@ export class AbsenceTypeResource extends Resource {
   }
 
   async delete(organizationId: string, id: string): Promise<void> {
-    return this.http.delete(
-      `${this.orgPath(organizationId)}/${encodeURIComponent(id)}`,
-    );
+    return this.http.delete(`${this.orgPath(organizationId)}/${encodeURIComponent(id)}`);
   }
 }

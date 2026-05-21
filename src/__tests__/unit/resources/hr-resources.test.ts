@@ -215,8 +215,6 @@ describe('HR Resources', () => {
       expect(typeof resource.get).toBe('function');
       expect(typeof resource.update).toBe('function');
       expect(typeof resource.delete).toBe('function');
-      expect(typeof resource.listAmendments).toBe('function');
-      expect(typeof resource.createAmendment).toBe('function');
       expect(typeof resource.activate).toBe('function');
       expect(typeof resource.suspend).toBe('function');
       expect(typeof resource.reactivate).toBe('function');
@@ -262,24 +260,6 @@ describe('HR Resources', () => {
       await resource.delete(orgId, 'contract-1');
       expect(mockClient.delete).toHaveBeenCalledWith(
         `/v1/organizations/${orgId}/contracts/contract-1`,
-      );
-    });
-
-    test('listAmendments should GET amendments', async () => {
-      mockClient.get = jest.fn().mockResolvedValue([]);
-      await resource.listAmendments(orgId, 'contract-1');
-      expect(mockClient.get).toHaveBeenCalledWith(
-        `/v1/organizations/${orgId}/contracts/contract-1/amendments`,
-      );
-    });
-
-    test('createAmendment should POST amendment data', async () => {
-      mockClient.post = jest.fn().mockResolvedValue({ id: 'amend-1' });
-      const data = { effectiveFrom: '2026-04-01', reason: 'Promotion', weeklyHours: 40 };
-      await resource.createAmendment(orgId, 'contract-1', data);
-      expect(mockClient.post).toHaveBeenCalledWith(
-        `/v1/organizations/${orgId}/contracts/contract-1/amendments`,
-        data,
       );
     });
 

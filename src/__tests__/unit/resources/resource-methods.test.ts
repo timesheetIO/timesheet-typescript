@@ -43,11 +43,18 @@ describe('Resource Method Verification', () => {
       expect(typeof projectResource.delete).toBe('function');
       expect(typeof projectResource.search).toBe('function');
 
-      // Verify non-existent methods
+      // Verify member-management methods
+      expect(typeof projectResource.listMembers).toBe('function');
+      expect(typeof projectResource.addMember).toBe('function');
+      expect(typeof projectResource.getMember).toBe('function');
+      expect(typeof projectResource.updateMember).toBe('function');
+      expect(typeof projectResource.updateMembers).toBe('function');
+      expect(typeof projectResource.removeMember).toBe('function');
+      expect(typeof projectResource.batchAddMembers).toBe('function');
+      expect(typeof projectResource.batchRemoveMembers).toBe('function');
+
+      // getMembers was never added — listMembers is the correct method
       expect((projectResource as unknown as Record<string, unknown>)['getMembers']).toBeUndefined();
-      expect(
-        (projectResource as unknown as Record<string, unknown>)['updateMembers'],
-      ).toBeUndefined();
     });
   });
 

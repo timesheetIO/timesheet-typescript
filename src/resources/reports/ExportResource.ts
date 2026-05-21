@@ -76,9 +76,9 @@ export class ExportResource extends Resource {
   /**
    * Get available export fields.
    * Returns the list of available export fields from the field registry.
-   * @param scope Optional scope filter: 'all', 'project', or 'team'
+   * @param scope Optional scope filter: 'project', 'team', 'task', or 'todo' (defaults to 'task')
    */
-  async getFields(scope?: 'all' | 'project' | 'team'): Promise<ExportFieldsResponse> {
+  async getFields(scope?: 'project' | 'team' | 'task' | 'todo'): Promise<ExportFieldsResponse> {
     return this.http.get<ExportFieldsResponse, Record<string, unknown>>(
       `${this.basePath}/fields`,
       scope ? { scope } : undefined,

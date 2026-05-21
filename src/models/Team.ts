@@ -1,4 +1,17 @@
-import type { ListParams } from './common';
+import type { ListParams, Member } from './common';
+
+export interface TeamPermission {
+  role?: string;
+  managerOrOwner?: boolean;
+  member?: boolean;
+  manager?: boolean;
+  owner?: boolean;
+}
+
+export interface TeamMemberProjectRegistration {
+  projectId?: string;
+  permission?: TeamPermission;
+}
 
 export interface Team {
   id: string;
@@ -8,13 +21,7 @@ export interface Team {
   image?: string;
   color?: number;
   projectSalaryVisibility?: number;
-  permission?: {
-    role: string;
-    managerOrOwner: boolean;
-    member: boolean;
-    manager: boolean;
-    owner: boolean;
-  };
+  permission?: TeamPermission;
   projects: number;
   members: number;
   created?: number;
@@ -27,13 +34,20 @@ export interface TeamList {
 }
 
 export interface TeamMember {
-  uid: string;
+  id: string;
+  user?: string;
   email: string;
   firstname?: string;
   lastname?: string;
   employeeId?: string;
   imageUrl?: string;
-  permission?: string;
+  deleted?: boolean;
+  invited?: boolean;
+  autoJoinProjects?: boolean;
+  permission?: TeamPermission;
+  projectRegistrations?: TeamMemberProjectRegistration[];
+  displayName?: string;
+  initials?: string;
   created?: number;
   lastUpdate?: number;
 }
@@ -41,6 +55,26 @@ export interface TeamMember {
 export interface TeamMemberList {
   items: TeamMember[];
   params: TeamMemberListParams;
+}
+
+export interface TeamMemberCreateRequest {
+  teamId?: string;
+  email?: string;
+  firstname?: string;
+  lastname?: string;
+  employeeId?: string;
+  permission?: TeamPermission;
+  projectRegistrations?: TeamMemberProjectRegistration[];
+}
+
+export interface TeamMemberUpdateRequest {
+  firstname?: string;
+  lastname?: string;
+  employeeId?: string;
+  activate?: boolean;
+  autoJoinProjects?: boolean;
+  permission?: TeamPermission;
+  projectRegistrations?: TeamMemberProjectRegistration[];
 }
 
 export interface TeamCreateRequest {
@@ -59,6 +93,7 @@ export interface TeamUpdateRequest {
   image?: string;
   color?: number;
   projectSalaryVisibility?: number;
+  deleted?: boolean;
 }
 
 export interface TeamListParams extends ListParams {
@@ -73,6 +108,26 @@ export interface TeamMemberListParams extends ListParams {
   teamId?: string;
   projectId?: string;
   withoutMe?: boolean;
+  withoutProjectMembers?: boolean;
   lastActivity?: boolean;
   deleted?: boolean;
+  userIds?: string[];
+  withoutUserIds?: string[];
+}
+
+/**
+ * Parameters for retrieving member activity status.
+ * `status` accepts: all | active | inactive | running | idle
+ */
+export interface MemberStatusParams extends ListParams {
+  organizationId?: string;
+  teamId?: string;
+  projectId?: string;
+  userIds?: string[];
+  status?: string;
+}
+
+export interface MemberStatusList {
+  items: Member[];
+  params: MemberStatusParams;
 }

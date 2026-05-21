@@ -45,6 +45,7 @@ export interface AutomationCreateRequest {
 }
 
 export interface AutomationUpdateRequest {
+  typeId?: 0 | 1 | 2;
   enabled?: boolean;
   shared?: boolean;
   action?: 0 | 1 | 2;
@@ -53,10 +54,16 @@ export interface AutomationUpdateRequest {
   latitude?: number;
   longitude?: number;
   radius?: number;
+  // WLAN fields
+  ssid?: string;
+  // Beacon fields
+  beaconUUID?: string;
+  deleted?: boolean;
 }
 
 export interface AutomationListParams extends ListParams {
   projectId?: string;
   status?: 'enabled' | 'disabled';
-  typeId?: 0 | 1 | 2;
+  type?: 0 | 1 | 2;
+  projectIds?: string[];
 }

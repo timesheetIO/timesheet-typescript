@@ -1,4 +1,5 @@
 import type { ListParams } from './common';
+import type { TeamPermission, TeamMemberProjectRegistration } from './Team';
 
 /**
  * Organization details
@@ -10,7 +11,8 @@ export interface Organization {
   image?: string;
   color?: number;
   subscription?: Record<string, unknown>;
-  user?: Record<string, unknown>;
+  user?: string;
+  aiChatEnabled?: boolean;
   permission?: OrganizationPermission;
   created?: number;
   lastUpdate?: number;
@@ -33,6 +35,7 @@ export interface OrganizationCreateRequest {
   description?: string;
   image?: string;
   color?: number;
+  aiChatEnabled?: boolean;
 }
 
 /**
@@ -43,24 +46,17 @@ export interface OrganizationUpdateRequest {
   description?: string;
   image?: string;
   color?: number;
+  aiChatEnabled?: boolean;
 }
 
 export interface OrganizationListParams extends ListParams {
-  status?: string;
-  deleted?: boolean;
+  permission?: string;
 }
 
 /**
  * Organization permission details
  */
 export interface OrganizationPermission {
-  uid: string;
-  firstname?: string;
-  lastname?: string;
-  email?: string;
-  imageUrl?: string;
-  deleted?: boolean;
-  teamMemberList?: boolean;
   invoicing?: boolean;
   billing?: boolean;
   admin?: boolean;
@@ -79,6 +75,9 @@ export interface OrganizationMember {
   deleted?: boolean;
   permission?: OrganizationPermission;
   teamAssignments?: OrganizationMemberTeamAssignment[];
+  hasActiveContract?: boolean;
+  displayName?: string;
+  initials?: string;
   lastUpdate?: number;
   created?: number;
 }
@@ -92,8 +91,8 @@ export interface OrganizationMemberTeamAssignment {
   teamName?: string;
   employeeId?: string;
   deleted?: boolean;
-  permission?: Record<string, unknown>;
-  projectRegistrations?: Record<string, unknown>[];
+  permission?: TeamPermission;
+  projectRegistrations?: TeamMemberProjectRegistration[];
   lastUpdate?: number;
   created?: number;
 }
@@ -125,6 +124,5 @@ export interface OrganizationMemberUpdateRequest {
  * Organization member list parameters
  */
 export interface OrganizationMemberListParams extends ListParams {
-  search?: string;
   deleted?: boolean;
 }

@@ -16,9 +16,12 @@ export interface Absence {
   totalHours?: string;
   reason?: string;
   documentationUrl?: string;
+  fileName?: string;
+  fileUri?: string;
   status?: string;
   requestedAt?: number;
   requestedBy?: string;
+  requestedByMember?: Member;
   approvedBy?: string;
   approvedAt?: number;
   rejectionReason?: string;
@@ -29,6 +32,8 @@ export interface Absence {
   canReject?: boolean;
   canCancel?: boolean;
   canEdit?: boolean;
+  documentationStatus?: string;
+  documentationDueDate?: string;
   lastUpdate?: number;
   created?: number;
 }
@@ -44,6 +49,8 @@ export interface AbsenceCreateRequest {
   fullDay?: boolean;
   reason?: string;
   documentationUrl?: string;
+  fileName?: string;
+  fileUri?: string;
 }
 
 /**
@@ -55,6 +62,8 @@ export interface AbsenceUpdateRequest {
   fullDay?: boolean;
   reason?: string;
   documentationUrl?: string;
+  fileName?: string;
+  fileUri?: string;
 }
 
 /**
@@ -73,8 +82,8 @@ export interface AbsenceListParams extends ListParams {
   userId?: string;
   absenceTypeId?: string;
   status?: string;
-  startDateTime?: string;
-  endDateTime?: string;
+  startDate?: string;
+  endDate?: string;
   year?: number;
   userIds?: string[];
   contractIds?: string[];

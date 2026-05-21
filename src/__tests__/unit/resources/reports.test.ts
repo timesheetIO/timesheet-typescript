@@ -252,7 +252,6 @@ describe('Reports Resources', () => {
 
         const mockResponse: FileResponse = {
           url: 'https://storage.example.com/export.xlsx',
-          filename: 'timesheet_2024-01-31.xlsx',
         };
 
         mockClient.post.mockResolvedValueOnce(mockResponse);
@@ -339,7 +338,7 @@ describe('Reports Resources', () => {
     describe('getReportTypes', () => {
       it('should get available report types', async () => {
         const mockResponse: ExportReportsResponse = {
-          reports: [
+          items: [
             { id: 1, name: 'Task Report' },
             { id: 2, name: 'Project Summary' },
           ],
@@ -505,7 +504,7 @@ describe('Reports Resources', () => {
           id: 'cf_123',
           name: 'My Field',
           scope: 'TASK',
-          type: 'TEXT',
+          customType: 'text',
         };
 
         mockClient.get.mockResolvedValueOnce(mockField);
@@ -522,16 +521,16 @@ describe('Reports Resources', () => {
         const createData = {
           name: 'My Field',
           scope: 'TASK',
-          type: 'TEXT',
-          value: 'Static Value',
+          customType: 'text',
+          customValue: 'Static Value',
         };
 
         const mockField: CustomExportField = {
           id: 'cf_new',
           name: 'My Field',
           scope: 'TASK',
-          type: 'TEXT',
-          value: 'Static Value',
+          customType: 'text',
+          customValue: 'Static Value',
         };
 
         mockClient.post.mockResolvedValueOnce(mockField);
@@ -550,7 +549,7 @@ describe('Reports Resources', () => {
           id: 'cf_123',
           name: 'Updated Field',
           scope: 'TASK',
-          type: 'TEXT',
+          customType: 'text',
         };
 
         mockClient.put.mockResolvedValueOnce(mockField);

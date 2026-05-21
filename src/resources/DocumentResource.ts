@@ -15,7 +15,14 @@ export class DocumentResource extends Resource {
   }
 
   async list(params?: DocumentListParams): Promise<NavigablePage<Document>> {
-    const response = await this.http.get<Page<Document>, DocumentListParams>(this.basePath, params);
+    // GET /v1/documents expects the category filter as the `type` query param.
+    const { category, ...rest } = params ?? {};
+    const query: Record<string, unknown> =
+      category !== undefined ? { ...rest, type: category } : { ...rest };
+    const response = await this.http.get<Page<Document>, Record<string, unknown>>(
+      this.basePath,
+      query,
+    );
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

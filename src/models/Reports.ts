@@ -413,6 +413,18 @@ export interface ExportParams {
   userIds?: string[];
   /** Filter by tag IDs */
   tagIds?: string[];
+  /** Filter by absence type IDs (absence reports) */
+  absenceTypeIds?: string[];
+  /** Filter by absence statuses (absence reports) */
+  absenceStatuses?: string[];
+  /** Filter by overtime statuses (overtime reports) */
+  overtimeStatuses?: string[];
+  /** Period type for overtime/leave reports: month, quarter, year */
+  periodType?: string;
+  /** Year for period-based reports */
+  year?: number;
+  /** Organization ID for organization-scoped reports */
+  organizationId?: string;
   /** Task type filter: all, task, mileage, call */
   type?: string;
   /** Start date (YYYY-MM-DD) */
@@ -433,6 +445,22 @@ export interface ExportParams {
   templateName?: string;
   /** Custom exported fields configuration */
   exportedFields?: ExportedField[];
+  /** File type of export */
+  fileType?: string;
+  /** Whether it is XLS format */
+  xls?: boolean;
+  /** Whether it is XLS 1904 format */
+  xls1904?: boolean;
+  /** Whether it is CSV format */
+  csv?: boolean;
+  /** Whether it is PDF format */
+  pdf?: boolean;
+  /** MIME type of the exported file */
+  mimeType?: string;
+  /** Date range string */
+  dateRange?: string;
+  /** File extension */
+  fileExtension?: string;
 }
 
 /**
@@ -458,10 +486,6 @@ export interface ExportTemplateParams {
 export interface FileResponse {
   /** Signed URL to download the file */
   url: string;
-  /** Filename */
-  filename?: string;
-  /** Content type */
-  contentType?: string;
 }
 
 /**
@@ -632,6 +656,10 @@ export interface ExportFieldDefinition {
 export interface ExportFieldsResponse {
   /** List of available fields */
   fields: ExportFieldDefinition[];
+  /** The scope filter that was applied */
+  scope?: string;
+  /** Total number of available fields */
+  totalCount?: number;
 }
 
 /**
@@ -642,12 +670,12 @@ export interface ExportReportType {
   id: number;
   /** Report name */
   name: string;
-  /** Report description */
-  description?: string;
-  /** Whether report accepts custom field selection */
-  acceptsCustomFields?: boolean;
+  /** Whether the report accepts custom field selection */
+  acceptFields?: boolean;
   /** Field scope for this report */
   fieldScope?: string;
+  /** Data category: task, overtime, absence, leave_balance, todo */
+  dataCategory?: string;
 }
 
 /**
@@ -655,7 +683,7 @@ export interface ExportReportType {
  */
 export interface ExportReportsResponse {
   /** List of available report types */
-  reports: ExportReportType[];
+  items: ExportReportType[];
 }
 
 // ============================================================================
@@ -672,14 +700,16 @@ export interface CustomExportField {
   user?: string;
   /** Field name/label */
   name: string;
+  /** Field type: text, number, formula */
+  customType: string;
+  /** Static value for text/number fields */
+  customValue?: string;
+  /** Excel formula for formula fields */
+  customFormula?: string;
   /** Field scope: TASK, PROJECT, TEAM */
   scope: string;
-  /** Field type: TEXT, NUMBER, FORMULA */
-  type: string;
-  /** Field value or formula */
-  value?: string;
-  /** Default width */
-  width?: number;
+  /** Default position in the export */
+  defaultPosition?: number;
   /** Whether the field is deleted */
   deleted?: boolean;
   /** Last update timestamp */
@@ -694,14 +724,16 @@ export interface CustomExportField {
 export interface CustomExportFieldCreateRequest {
   /** Field name/label */
   name: string;
+  /** Field type: text, number, formula */
+  customType: string;
+  /** Static value for text/number fields */
+  customValue?: string;
+  /** Excel formula for formula fields */
+  customFormula?: string;
   /** Field scope: TASK, PROJECT, TEAM */
   scope: string;
-  /** Field type: TEXT, NUMBER, FORMULA */
-  type: string;
-  /** Field value or formula */
-  value?: string;
-  /** Default width */
-  width?: number;
+  /** Default position in the export */
+  defaultPosition?: number;
 }
 
 /**
@@ -710,14 +742,14 @@ export interface CustomExportFieldCreateRequest {
 export interface CustomExportFieldUpdateRequest {
   /** Field name/label */
   name?: string;
-  /** Field scope: TASK, PROJECT, TEAM */
-  scope?: string;
-  /** Field type: TEXT, NUMBER, FORMULA */
-  type?: string;
-  /** Field value or formula */
-  value?: string;
-  /** Default width */
-  width?: number;
+  /** Static value for text/number fields */
+  customValue?: string;
+  /** Excel formula for formula fields */
+  customFormula?: string;
+  /** Default position in the export */
+  defaultPosition?: number;
+  /** Whether the field is deleted */
+  deleted?: boolean;
 }
 
 /**
@@ -726,4 +758,6 @@ export interface CustomExportFieldUpdateRequest {
 export interface CustomExportFieldsResponse {
   /** List of custom export fields */
   fields: CustomExportField[];
+  /** The scope filter that was applied */
+  scope?: string;
 }

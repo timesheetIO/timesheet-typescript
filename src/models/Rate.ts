@@ -44,4 +44,5 @@ export interface RateListParams extends ListParams {
   status?: 'all' | 'active' | 'inactive';
   sort?: 'alpha' | 'status' | 'created';
   order?: 'asc' | 'desc';
+  empty?: boolean;
 }

@@ -1,6 +1,14 @@
 import type { ListParams } from './common';
 import type { Team } from './Team';
 
+export interface ProjectPermission {
+  role?: string;
+  managerOrOwner?: boolean;
+  member?: boolean;
+  manager?: boolean;
+  owner?: boolean;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -14,13 +22,7 @@ export interface Project {
   salaryVisibility?: number;
   salary?: string;
   team?: Team;
-  permission?: {
-    role: string;
-    managerOrOwner: boolean;
-    member: boolean;
-    manager: boolean;
-    owner: boolean;
-  };
+  permission?: ProjectPermission;
   duration?: number;
   durationBreak?: number;
   salaryTotal?: string;
@@ -31,6 +33,8 @@ export interface Project {
   todoEstimatedDuration?: number;
   todoTrackedDuration?: number;
   todoCount?: number;
+  titleAndClient?: string;
+  salaryVisible?: boolean;
   user?: string;
   created?: number;
   lastUpdate?: number;
@@ -43,24 +47,46 @@ export interface ProjectList {
 }
 
 export interface ProjectMember {
-  uid: string;
+  id: string;
+  user?: string;
   email: string;
   firstname?: string;
   lastname?: string;
-  employeeId?: string;
   imageUrl?: string;
-  salaryActivated?: boolean;
-  salary?: number;
-  permission?: {
-    role: string;
-    managerOrOwner: boolean;
-    member: boolean;
-    manager: boolean;
-    owner: boolean;
-  };
+  deleted?: boolean;
+  permission?: ProjectPermission;
   lastUpdate?: number;
   created?: number;
   displayName?: string;
+  initials?: string;
+}
+
+export interface ProjectMemberList {
+  items: ProjectMember[];
+  params: ProjectMemberListParams;
+}
+
+export interface ProjectMemberCreateRequest {
+  projectId?: string;
+  email?: string;
+  userId?: string;
+  permission?: ProjectPermission;
+}
+
+export interface ProjectMemberUpdateRequest {
+  permission?: ProjectPermission;
+}
+
+/**
+ * Project member registration used for bulk member replacement via
+ * ProjectResource.updateMembers(). `salary` is a decimal serialized as a string.
+ */
+export interface ProjectRegistration {
+  id?: string;
+  role?: string;
+  user?: string;
+  salaryActivated?: boolean;
+  salary?: string;
 }
 
 export interface ProjectCreateRequest {
@@ -94,7 +120,6 @@ export interface ProjectUpdateRequest {
 export interface ProjectListParams extends ListParams {
   teamId?: string;
   status?: 'all' | 'active' | 'inactive';
-  statistics?: boolean;
   sort?: 'alpha' | 'alphaNum' | 'client' | 'duration' | 'created' | 'status';
   order?: 'asc' | 'desc';
   teamIds?: string[];
@@ -105,4 +130,13 @@ export interface ProjectListParams extends ListParams {
   taskType?: string;
   taskFilter?: string;
   taskUserIds?: string[];
+  empty?: boolean;
+}
+
+export interface ProjectMemberListParams extends ListParams {
+  projectId?: string;
+  status?: string;
+  withoutMe?: boolean;
+  userIds?: string[];
+  withDeleted?: boolean;
 }

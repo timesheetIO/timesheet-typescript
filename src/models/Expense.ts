@@ -53,6 +53,7 @@ export interface ExpenseListParams extends ListParams {
   endDate?: string;
   taskId?: string;
   documentId?: string;
+  organizationId?: string;
   filter?: string;
   projectIds?: string[];
   taskIds?: string[];

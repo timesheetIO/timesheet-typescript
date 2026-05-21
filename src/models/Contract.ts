@@ -6,7 +6,6 @@ import type { ListParams, Member } from './common';
 export interface Contract {
   id: string;
   organizationId: string;
-  userId: string;
   name: string;
   member?: Member;
   validFrom?: string;
@@ -24,8 +23,10 @@ export interface Contract {
   vacationDaysCarriedOver?: number;
   sickLeavePaidDays?: number;
   employmentModelId?: string;
+  employmentModelName?: string;
   overtimeEnabled?: boolean;
   holidayCollectionId?: string;
+  holidayCollectionName?: string;
   exemptStatus?: string;
   workweekStartDay?: number;
   countryCode?: string;
@@ -95,40 +96,9 @@ export interface ContractUpdateRequest {
 /**
  * Contract list parameters
  */
-export interface ContractListParams extends ListParams {}
-
-/**
- * Contract amendment details
- */
-export interface ContractAmendment {
-  id: string;
-  contractId: string;
-  effectiveFrom?: string;
-  reason?: string;
-  amendmentType?: string;
-  weeklyHours?: number;
-  dailyHours?: number;
-  salaryAmount?: number;
-  employmentModelId?: string;
-  vacationDaysAnnual?: number;
-  approvedBy?: string;
-  approvedAt?: number;
-  lastUpdate?: number;
-  created?: number;
-}
-
-/**
- * Create contract amendment request
- */
-export interface ContractAmendmentCreateRequest {
-  effectiveFrom: string;
-  reason?: string;
-  amendmentType?: string;
-  weeklyHours?: number;
-  dailyHours?: number;
-  salaryAmount?: number;
-  employmentModelId?: string;
-  vacationDaysAnnual?: number;
+export interface ContractListParams extends ListParams {
+  userId?: string;
+  status?: string;
 }
 
 /**

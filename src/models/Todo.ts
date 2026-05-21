@@ -6,7 +6,7 @@ export interface Todo {
   name: string;
   description?: string;
   project?: Project;
-  status: 'open' | 'closed';
+  status: number;
   dueDate?: string;
   assignedUsers?: string;
   estimatedHours?: number;
@@ -18,6 +18,7 @@ export interface Todo {
   expenses?: string;
   expensesPaid?: string;
   mileage?: string;
+  progress?: number;
   user?: string;
   deleted?: boolean;
   created?: number;
@@ -46,7 +47,7 @@ export interface TodoCreateRequest {
 export interface TodoUpdateRequest {
   name?: string;
   description?: string;
-  status?: 'open' | 'closed';
+  status?: number;
   dueDate?: string;
   assignedUsers?: string;
   estimatedHours?: number;
