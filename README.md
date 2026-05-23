@@ -13,6 +13,8 @@ The official TypeScript SDK for the [Timesheet API](https://timesheet.io), provi
 - ✅ **Type-Safe** - Full TypeScript support with comprehensive types
 - ✅ **Modern Architecture** - Promise-based with async/await support
 - ✅ **Authentication** - Built-in API Key, OAuth2, and OAuth 2.1 (PKCE) with automatic discovery (RFC 8414)
+- ✅ **Real-Time Events** - Server-Sent Events (SSE) for live updates
+- ✅ **File Uploads** - Multipart uploads for expense receipts and note attachments
 - ✅ **Error Handling** - Typed exceptions for better error management
 - ✅ **Pagination** - Automatic pagination with async iterators
 - ✅ **Retry Logic** - Configurable retry with exponential backoff
@@ -225,22 +227,28 @@ const client = new TimesheetClient({
 All API resources are available through the client:
 
 ```typescript
-client.tasks         // Task management
-client.projects      // Project management
-client.tags          // Tag management
-client.teams         // Team management
-client.organizations // Organization settings
-client.timer         // Real-time time tracking
-client.rates         // Billing rates
-client.expenses      // Expense tracking
-client.notes         // Note attachments
-client.pauses        // Break time tracking
-client.documents     // Document generation
-client.webhooks      // Event notifications
-client.automations   // Time tracking automation
-client.todos         // Task management
-client.profile       // User profile
-client.settings      // User settings
+client.tasks             // Task management
+client.projects          // Project management (including project members)
+client.tags              // Tag management
+client.teams             // Team management (including team members)
+client.organizations     // Organization settings
+client.timer             // Real-time time tracking
+client.rates             // Billing rates
+client.expenses          // Expense tracking (with file upload)
+client.notes             // Note attachments (with file upload)
+client.pauses            // Break time tracking
+client.documents         // Document and invoice generation
+client.webhooks          // Webhook subscriptions
+client.automations       // Time tracking automation
+client.todos             // Todo management
+client.events            // Real-time SSE event streaming
+client.absences          // Absence requests and approvals
+client.absenceTypes      // Absence type configuration
+client.contracts         // Employment contracts
+client.contractTemplates // Contract templates
+client.profile           // User profile
+client.settings          // User settings
+client.reports           // Reports API (documents, tasks, expenses, notes, exports)
 ```
 
 ## Examples
@@ -312,6 +320,85 @@ await client.timer.resume({
 // Stop and create task
 const stoppedTimer = await client.timer.stop({
   endDateTime: new Date().toISOString()
+});
+```
+
+### Real-Time Events (SSE)
+
+Subscribe to live changes for tasks, projects, teams, and other entities via Server-Sent Events.
+
+```typescript
+const subscription = await client.events.subscribe({
+  onConnected: (connectionId) => {
+    console.log('Connected with ID:', connectionId);
+  },
+  onEvent: (event) => {
+    switch (event.event) {
+      case 'task.create':
+        console.log('New task:', event.item);
+        break;
+      case 'task.update':
+        console.log('Task updated:', event.item);
+        break;
+    }
+  },
+  onError: (error) => {
+    console.error('SSE error:', error);
+  },
+});
+
+// Check connection status
+const status = await client.events.getStatus();
+
+// Close when done
+subscription.close();
+```
+
+### File Uploads
+
+Attach receipts to expenses and files to notes via `multipart/form-data` uploads.
+
+```typescript
+// Upload a receipt to an existing expense
+await client.expenses.uploadFile('expense-id', {
+  file: fileBuffer,        // Buffer, Blob, or ReadableStream
+  filename: 'receipt.pdf',
+  contentType: 'application/pdf',
+});
+
+// Create a note with an attachment in one call
+const note = await client.notes.createWithFile({
+  taskId: 'task-id',
+  description: 'Meeting notes',
+  file: fileBuffer,
+  filename: 'notes.pdf',
+});
+```
+
+### Team and Project Members
+
+```typescript
+// Add a member to a team
+const teamMember = await client.teams.addMember('team-id', {
+  email: 'colleague@example.com',
+  permission: { role: 'manager' },
+});
+
+// Get team members with current activity status
+const status = await client.teams.getMemberStatus({
+  teamId: 'team-id',
+  status: 'running', // all | active | inactive | running | idle
+});
+
+// Add a member to a project
+await client.projects.addMember('project-id', {
+  userId: 'user-id',
+  permission: { role: 'member' },
+});
+
+// List project members
+const members = await client.projects.listMembers('project-id', {
+  status: 'active',
 });
 ```
 

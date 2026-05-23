@@ -6,6 +6,69 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.1.0] - 2026-05-23
+
+### Added
+- Team member management on `TeamResource`:
+  - `addMember()`, `updateMember()`, `removeMember()`, `removeInvitedMember()`
+  - `batchAddMembers()` for bulk member registration
+  - `getMemberStatus()` for retrieving members with current activity status
+- Project member management on `ProjectResource`:
+  - `listMembers()`, `addMember()`, `getMember()`, `updateMember()`, `removeMember()`
+  - `updateMembers()` for full member-list replacement
+  - `batchAddMembers()` / `batchRemoveMembers()` for bulk operations
+- E-invoicing fields on `Document` and `DocumentUpdateRequest`:
+  - VAT/tax IDs, registration and bank details (BIC, IBAN)
+  - Reverse charge, cash discount, payment term, delivery and due dates
+  - Order, project, procurement and contract references, cost center
+  - Government invoice flag, original invoice references
+  - E-invoice type, currency and document type fields
+- QR code support on `Document` (`showQrCode`, `qrCodeType`, `qrCodeContent`, `qrCodeDescription`)
+- Payment status flags on `Document` (`fullyPaid`, `partiallyPaid`)
+- Absence file attachments: `fileName` and `fileUri` on `Absence`, `AbsenceCreateRequest`, `AbsenceUpdateRequest`
+- Absence documentation tracking: `documentationStatus`, `documentationDueDate`, `requestedByMember` on `Absence`
+- `ContractListParams.userId` and `ContractListParams.status` filters
+- Extracted shared `TeamPermission` and `ProjectPermission` interfaces
+- New types: `TeamMemberCreateRequest`, `TeamMemberUpdateRequest`, `TeamMemberProjectRegistration`, `MemberStatusParams`, `MemberStatusList`, `ProjectMemberCreateRequest`, `ProjectMemberUpdateRequest`, `ProjectMemberListParams`, `ProjectMemberList`, `ProjectRegistration`
+- `Project.titleAndClient` and `Project.salaryVisible` convenience fields
+- `DocumentListParams.organizationUnassigned` filter
+- `ProjectListParams.empty` filter
+- `TeamMemberListParams`: `withoutProjectMembers`, `userIds`, `withoutUserIds`
+- `ListParams.search` (free-text search) and `ListParams.offset` (result offset) for all list endpoints
+- `ApiClient.delete()` now accepts an optional request body for endpoints that support batch deletes
+- Additional fields on `Contract`: `employmentModelName`, `holidayCollectionName`
+
+### Changed
+- **BREAKING**: `AbsenceListParams` fields renamed from `startDateTime` / `endDateTime` to `startDate` / `endDate` to match the API
+- **BREAKING**: `Document` monetary fields are now serialized as `string` (BigDecimal) instead of `number`: `taskSubtotal`, `expenseSubtotal`, `subtotal`, `tax`, `taxValue`, `taxSecond`, `taxSecondValue`, `discount`, `discountValue`, `discountSecondValue`, `total`, `payment`
+- **BREAKING**: `TeamMember.uid` renamed to `TeamMember.id`; `user` field added for the linked user identifier
+- **BREAKING**: `ProjectMember.uid` renamed to `ProjectMember.id`; `user` field added for the linked user identifier
+- **BREAKING**: `TeamResource.getColleagues()` now returns `NavigablePage<Member>` instead of `NavigablePage<TeamMember>`
+- **BREAKING**: `Contract.userId` removed; use `Contract.member` to access the associated user
+- `Project.permission` and `Team.permission` now use the shared `TeamPermission` / `ProjectPermission` interfaces
+- `ExportResource.getFields()` `scope` parameter changed from `'all' | 'project' | 'team'` to `'project' | 'team' | 'task' | 'todo'` (defaults to `'task'`)
+- `Document.organization` (full `Organization` reference) now included alongside `organizationId`
+- `TodoResource.list()` updated to handle the bare-array response from `GET /v1/todos`
+
+### Removed
+- **BREAKING**: `ContractAmendment` and `ContractAmendmentCreateRequest` types removed
+- **BREAKING**: `ContractResource.listAmendments()` and `ContractResource.createAmendment()` removed
+- **BREAKING**: `ProjectListParams.statistics` removed (statistics are now always included)
+
+## [1.0.6] - 2026-01-27
+
+### Changed
+- Replaced `tsup` / `rollup` with `esbuild` for builds to resolve native binary installation issues
+- Type declarations are now emitted via `tsc` directly
+
+## [1.0.5] - 2026-01-27
+
+### Added
+- `EventResource` for real-time Server-Sent Events (SSE) streaming
+- File upload methods on `ExpenseResource` and `NoteResource` (`uploadFile()` and combined create-with-file helpers)
+- `ApiClient.postMultipart()` for `multipart/form-data` requests
+- `ApiClient.getBaseUrl()` and `ApiClient.getAuthHeaders()` to support SSE and custom transports
+
 ## [1.0.4] - 2026-01-04
 
 ### Added
@@ -100,7 +163,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed complex mocking in favor of simple validation tests
 - Updated GitHub Actions to use non-deprecated action versions
 
-[Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.4...HEAD
+[Unreleased]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.6...v1.1.0
+[1.0.6]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.4...v1.0.6
+[1.0.5]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/timesheetIO/timesheet-typescript/compare/v1.0.1...v1.0.2

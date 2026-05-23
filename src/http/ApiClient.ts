@@ -23,7 +23,7 @@ export class ApiClient {
         baseURL: config.baseUrl,
         timeout: 30000,
         headers: {
-          'User-Agent': 'Timesheet-TypeScript-SDK/1.0.0',
+          'User-Agent': 'Timesheet-TypeScript-SDK/1.1.0',
           'Content-Type': 'application/json',
         },
       });
