@@ -1,6 +1,12 @@
 import type { ApiClient } from '../http';
-import type { Page, Todo, TodoCreateRequest, TodoListParams, TodoUpdateRequest } from '../models';
-import { NavigablePage } from '../models';
+import type {
+  NavigablePage,
+  Page,
+  Todo,
+  TodoCreateRequest,
+  TodoListParams,
+  TodoUpdateRequest,
+} from '../models';
 import { DateUtils } from '../utils/date';
 import { Resource } from './Resource';
 
@@ -10,11 +16,8 @@ export class TodoResource extends Resource {
   }
 
   async list(params?: TodoListParams): Promise<NavigablePage<Todo>> {
-    // GET /v1/todos returns a bare array, not a paged object.
-    const items = await this.http.get<Todo[], TodoListParams>(this.basePath, params);
-    return new NavigablePage({ items: items ?? [], params: params ?? {} }, (page) =>
-      this.list({ ...params, page }),
-    );
+    const response = await this.http.get<Page<Todo>, TodoListParams>(this.basePath, params);
+    return this.createNavigablePage(response, (page) => this.list({ ...params, page }));
   }
 
   async create(data: TodoCreateRequest): Promise<Todo> {

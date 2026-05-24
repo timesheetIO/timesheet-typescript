@@ -1,6 +1,12 @@
 import type { ApiClient } from '../http';
-import type { Page, Tag, TagCreateRequest, TagListParams, TagUpdateRequest } from '../models';
-import { NavigablePage } from '../models';
+import type {
+  NavigablePage,
+  Page,
+  Tag,
+  TagCreateRequest,
+  TagListParams,
+  TagUpdateRequest,
+} from '../models';
 import { Resource } from './Resource';
 
 export class TagResource extends Resource {
@@ -9,11 +15,8 @@ export class TagResource extends Resource {
   }
 
   async list(params?: TagListParams): Promise<NavigablePage<Tag>> {
-    // GET /v1/tags returns a bare array, not a paged object.
-    const items = await this.http.get<Tag[], TagListParams>(this.basePath, params);
-    return new NavigablePage({ items: items ?? [], params: params ?? {} }, (page) =>
-      this.list({ ...params, page }),
-    );
+    const response = await this.http.get<Page<Tag>, TagListParams>(this.basePath, params);
+    return this.createNavigablePage(response, (page) => this.list({ ...params, page }));
   }
 
   async create(data: TagCreateRequest): Promise<Tag> {

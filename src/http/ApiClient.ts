@@ -2,6 +2,7 @@ import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import type { ClientConfig } from '../config';
 import { TimesheetApiError, TimesheetAuthError, TimesheetRateLimitError } from '../exceptions';
+import { SDK_VERSION } from '../version';
 
 interface ErrorResponseData {
   message?: string;
@@ -23,7 +24,7 @@ export class ApiClient {
         baseURL: config.baseUrl,
         timeout: 30000,
         headers: {
-          'User-Agent': 'Timesheet-TypeScript-SDK/1.1.0',
+          'User-Agent': `Timesheet-TypeScript-SDK/${SDK_VERSION}`,
           'Content-Type': 'application/json',
         },
       });
