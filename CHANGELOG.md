@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.1.2] - 2026-05-25
+
+### Added
+- `invited?: boolean` on `OrganizationMember`, mirroring the field already present on `TeamMember`. Lets clients distinguish placeholder/invited members from activated users.
+- `OrganizationResource.removeInvitedMember(organizationId, permissionId)` — calls `DELETE /v1/organizations/{organizationId}/members/{permissionId}/invited` to permanently delete an invited (not-yet-activated) organization member and their profile. Parallel to `TeamResource.removeInvitedMember()`.
+
 ## [1.1.1] - 2026-05-24
 
 ### Fixed

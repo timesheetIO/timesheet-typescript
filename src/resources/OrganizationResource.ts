@@ -114,4 +114,14 @@ export class OrganizationResource extends Resource {
       `${this.basePath}/${encodeURIComponent(organizationId)}/members/${encodeURIComponent(permissionId)}`,
     );
   }
+
+  /**
+   * Permanently delete an invited organization member and their profile.
+   * The member must still be in invited status (account not yet activated).
+   */
+  async removeInvitedMember(organizationId: string, permissionId: string): Promise<void> {
+    return this.http.delete(
+      `${this.basePath}/${encodeURIComponent(organizationId)}/members/${encodeURIComponent(permissionId)}/invited`,
+    );
+  }
 }

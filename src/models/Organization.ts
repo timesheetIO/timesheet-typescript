@@ -73,6 +73,7 @@ export interface OrganizationMember {
   lastname?: string;
   imageUrl?: string;
   deleted?: boolean;
+  invited?: boolean;
   permission?: OrganizationPermission;
   teamAssignments?: OrganizationMemberTeamAssignment[];
   hasActiveContract?: boolean;
