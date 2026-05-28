@@ -4,6 +4,7 @@ import type {
   CustomExportFieldCreateRequest,
   CustomExportFieldsResponse,
   CustomExportFieldUpdateRequest,
+  ExportedField,
   ExportFieldsResponse,
   ExportParams,
   ExportReportsResponse,
@@ -129,7 +130,8 @@ export class ExportResource extends Resource {
    * @param data Template creation data
    */
   async createTemplate(data: ExportTemplateCreateRequest): Promise<ExportTemplate> {
-    return this.http.post<ExportTemplate>(`${this.basePath}/templates`, data);
+    const raw = await this.http.post<Record<string, unknown>>(`${this.basePath}/templates`, data);
+    return this.normalizeTemplate(raw);
   }
 
   /**
@@ -153,10 +155,41 @@ export class ExportResource extends Resource {
     templateId: string,
     data: ExportTemplateUpdateRequest,
   ): Promise<ExportTemplate> {
-    return this.http.put<ExportTemplate>(
+    const raw = await this.http.put<Record<string, unknown>>(
       `${this.basePath}/templates/${encodeURIComponent(templateId)}`,
       data,
     );
+    return this.normalizeTemplate(raw);
+  }
+
+  /**
+   * The create/update template endpoints return the raw template entity, in
+   * which the array fields (teamIds, projectIds, userIds, tagIds, exportedFields)
+   * are serialized as JSON strings. getTemplate()/listTemplates() return them
+   * already resolved. This normalizes the entity response so create/update
+   * expose the same resolved ExportTemplate shape.
+   */
+  private normalizeTemplate(raw: Record<string, unknown>): ExportTemplate {
+    const parseArray = <T>(value: unknown): T[] | undefined => {
+      if (Array.isArray(value)) return value as T[];
+      if (typeof value === 'string' && value.length > 0) {
+        try {
+          const parsed = JSON.parse(value);
+          return Array.isArray(parsed) ? (parsed as T[]) : undefined;
+        } catch {
+          return undefined;
+        }
+      }
+      return undefined;
+    };
+    return {
+      ...(raw as unknown as ExportTemplate),
+      teamIds: parseArray<string>(raw['teamIds']),
+      projectIds: parseArray<string>(raw['projectIds']),
+      userIds: parseArray<string>(raw['userIds']),
+      tagIds: parseArray<string>(raw['tagIds']),
+      exportedFields: parseArray<ExportedField>(raw['exportedFields']),
+    };
   }
 
   /**

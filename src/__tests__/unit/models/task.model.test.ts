@@ -17,19 +17,16 @@ describe('Task Model Validation', () => {
     test('should have all required fields', () => {
       const task: Task = {
         id: 'task-123',
-        projectId: 'proj-123',
         startDateTime: '2024-01-01T09:00:00+02:00',
       };
 
       expect(task.id).toBeDefined();
-      expect(task.projectId).toBeDefined();
       expect(task.startDateTime).toBeDefined();
     });
 
     test('should accept all optional fields', () => {
       const task: Task = {
         id: 'task-123',
-        projectId: 'proj-123',
         user: 'user-123',
         description: 'Test task',
         startDateTime: '2024-01-01T09:00:00+02:00',

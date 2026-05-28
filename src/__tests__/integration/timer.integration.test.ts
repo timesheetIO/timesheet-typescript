@@ -59,7 +59,7 @@ describeIntegration('Timer Resource Integration Tests', () => {
       };
       const startedTimer = await client.timer.start(startRequest);
       expect(startedTimer.status).toBe('running');
-      expect(startedTimer.task?.projectId).toBe(testConfig.projectId);
+      expect(startedTimer.task?.project?.id).toBe(testConfig.projectId);
 
       // Wait a bit
       await new Promise((resolve) => setTimeout(resolve, 1000));

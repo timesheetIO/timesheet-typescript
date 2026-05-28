@@ -145,6 +145,8 @@ export interface NoteReportItem {
  */
 export interface DocumentReport {
   // Document Header Properties
+  /** Internal document name */
+  documentName?: string;
   /** Main document title/name */
   documentTitle?: string;
   /** Formatted document creation date */
@@ -157,6 +159,8 @@ export interface DocumentReport {
   paymentDate?: string;
   /** Payment method description */
   paymentMethod?: string;
+  /** Whether the document has been marked as paid */
+  paid?: boolean;
 
   // Company Information
   /** Business/company name */

@@ -129,15 +129,6 @@ export class TeamResource extends Resource {
   }
 
   /**
-   * Create multiple team members in a single operation. Each member object
-   * carries its own team identifier.
-   * @param members Member creation objects
-   */
-  async batchAddMembers(members: TeamMemberCreateRequest[]): Promise<void> {
-    return this.http.post<void>(`${this.basePath}/batchTeamMembers`, members);
-  }
-
-  /**
    * Get team members with their current activity status. Results are sorted
    * with currently-working members first.
    * @param params Filter parameters (organization, team, project, users, status)

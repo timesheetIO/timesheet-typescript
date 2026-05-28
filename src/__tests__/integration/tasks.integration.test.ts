@@ -57,7 +57,7 @@ describeIntegration('Tasks Resource Integration Tests', () => {
 
       expect(task).toBeDefined();
       expect(task.id).toBeDefined();
-      expect(task.projectId).toBe(createdProjectId);
+      expect(task.project?.id).toBe(createdProjectId);
       expect(task.description).toBe(taskData.description);
       expect(task.billable).toBe(true);
 
@@ -74,7 +74,7 @@ describeIntegration('Tasks Resource Integration Tests', () => {
 
       expect(task).toBeDefined();
       expect(task.id).toBe(createdTaskId);
-      expect(task.projectId).toBe(createdProjectId);
+      expect(task.project?.id).toBe(createdProjectId);
       expect(task.description).toBeDefined();
     });
 

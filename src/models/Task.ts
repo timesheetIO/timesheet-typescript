@@ -9,7 +9,6 @@ import type { Note } from './Note';
 
 export interface Task {
   id: string;
-  projectId: string;
   description?: string;
   /**
    * ISO 8601 date-time with timezone offset (e.g. 2025-05-31T16:45:51+02:00)

@@ -97,7 +97,7 @@ export interface ContractUpdateRequest {
  * Contract list parameters
  */
 export interface ContractListParams extends ListParams {
-  userId?: string;
+  user?: string;
   status?: string;
 }
 
