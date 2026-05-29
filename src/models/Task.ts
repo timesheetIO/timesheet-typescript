@@ -1,4 +1,4 @@
-import type { Member, PageParams } from './common';
+import type { ListParams, Member } from './common';
 import type { Project } from './Project';
 import type { Todo } from './Todo';
 import type { Rate } from './Rate';
@@ -145,7 +145,7 @@ export interface TaskTimesUpdateRequest {
   end: string;
 }
 
-export interface TaskListParams extends PageParams {
+export interface TaskListParams extends ListParams {
   sort?: 'dateTime' | 'time' | 'created';
   order?: 'asc' | 'desc';
   organizationId?: string;

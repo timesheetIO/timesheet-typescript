@@ -14,15 +14,23 @@ export class DocumentResource extends Resource {
     super(client, '/v1/documents');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: DocumentListParams): Promise<NavigablePage<Document>> {
-    // GET /v1/documents expects the category filter as the `type` query param.
-    const { category, ...rest } = params ?? {};
-    const query: Record<string, unknown> =
-      category !== undefined ? { ...rest, type: category } : { ...rest };
-    const response = await this.http.get<Page<Document>, Record<string, unknown>>(
-      this.basePath,
-      query,
-    );
+    const query = params
+      ? {
+          organizationId: params.organizationId,
+          type: params.type,
+          status: params.status,
+          template: params.template,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Document>>(this.basePath, query);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

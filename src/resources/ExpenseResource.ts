@@ -18,8 +18,22 @@ export class ExpenseResource extends Resource {
     super(client, '/v1/expenses');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: ExpenseListParams): Promise<NavigablePage<Expense>> {
-    const response = await this.http.get<Page<Expense>, ExpenseListParams>(this.basePath, params);
+    const query = params
+      ? {
+          taskId: params.taskId,
+          filter: params.filter,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+          organizationId: params.organizationId,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Expense>>(this.basePath, query);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

@@ -24,11 +24,18 @@ export class AbsenceResource extends Resource {
     return `${this.basePath}/${encodeURIComponent(organizationId)}/absences`;
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(organizationId: string, params?: AbsenceListParams): Promise<NavigablePage<Absence>> {
-    const response = await this.http.get<Page<Absence>, AbsenceListParams>(
-      this.orgPath(organizationId),
-      params,
-    );
+    const query = params
+      ? {
+          contractId: params.contractId,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Absence>>(this.orgPath(organizationId), query);
     return this.createNavigablePage(response, (page) =>
       this.list(organizationId, { ...params, page }),
     );

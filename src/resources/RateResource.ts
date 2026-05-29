@@ -8,8 +8,22 @@ export class RateResource extends Resource {
     super(client, '/v1/rates');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: RateListParams): Promise<NavigablePage<Rate>> {
-    const response = await this.http.get<Page<Rate>, RateListParams>(this.basePath, params);
+    const query = params
+      ? {
+          teamId: params.teamId,
+          projectId: params.projectId,
+          status: params.status,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Rate>>(this.basePath, query);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

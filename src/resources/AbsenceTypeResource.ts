@@ -21,14 +21,22 @@ export class AbsenceTypeResource extends Resource {
     return `${this.basePath}/${encodeURIComponent(organizationId)}/absence-types`;
   }
 
+  /**
+   * These are the only filters this endpoint supports.
+   */
   async list(
     organizationId: string,
     params?: AbsenceTypeListParams,
   ): Promise<NavigablePage<AbsenceType>> {
-    const response = await this.http.get<Page<AbsenceType>, AbsenceTypeListParams>(
-      this.orgPath(organizationId),
-      params,
-    );
+    const query = params
+      ? {
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<AbsenceType>>(this.orgPath(organizationId), query);
     return this.createNavigablePage(response, (page) =>
       this.list(organizationId, { ...params, page }),
     );

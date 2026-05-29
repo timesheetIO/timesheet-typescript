@@ -21,14 +21,25 @@ export class ContractResource extends Resource {
     return `${this.basePath}/${encodeURIComponent(organizationId)}/contracts`;
   }
 
+  /**
+   * These are the only filters this endpoint supports.
+   */
   async list(
     organizationId: string,
     params?: ContractListParams,
   ): Promise<NavigablePage<Contract>> {
-    const response = await this.http.get<Page<Contract>, ContractListParams>(
-      this.orgPath(organizationId),
-      params,
-    );
+    const query = params
+      ? {
+          user: params.user,
+          status: params.status,
+          search: params.search,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Contract>>(this.orgPath(organizationId), query);
     return this.createNavigablePage(response, (page) =>
       this.list(organizationId, { ...params, page }),
     );

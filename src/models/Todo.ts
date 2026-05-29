@@ -57,6 +57,8 @@ export interface TodoUpdateRequest {
 
 export interface TodoListParams extends ListParams {
   projectId?: string;
+  projectIds?: string[];
   status?: 'open' | 'closed';
   assignedUsers?: string;
+  userIds?: string[];
 }

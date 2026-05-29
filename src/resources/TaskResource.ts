@@ -20,10 +20,20 @@ export class TaskResource extends Resource {
 
   /**
    * List tasks with pagination and sorting.
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
    * @param params Pagination, sorting, and optional organization filter
    */
   async list(params?: TaskListParams): Promise<NavigablePage<Task>> {
-    const response = await this.http.get<Page<Task>, TaskListParams>(this.basePath, params);
+    const query = params
+      ? {
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+          organizationId: params.organizationId,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Task>>(this.basePath, query);
     return this.createNavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

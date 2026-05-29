@@ -15,8 +15,20 @@ export class PauseResource extends Resource {
     super(client, '/v1/pauses');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: PauseListParams): Promise<NavigablePage<Pause>> {
-    const response = await this.http.get<Page<Pause>, PauseListParams>(this.basePath, params);
+    const query = params
+      ? {
+          taskId: params.taskId,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Pause>>(this.basePath, query);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

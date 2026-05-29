@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.2.0] - 2026-05-29
+
+### Changed
+- `list()` methods on all resources now send only the query parameters the `GET` list endpoint actually supports (typically `sort`, `order`, `page`, `limit`, plus a few endpoint-specific filters). Previously the full `*ListParams` object was serialized into the query string, so advanced filters were sent but silently ignored by the server. Pass those to `search()` instead, which accepts the full `*ListParams` as a `POST` body. Both `list()` and `search()` remain fully paginated.
+- **BREAKING**: `ContractListParams.userId` renamed to `user` to match the API query parameter. The previous `userId` was sent as an unrecognized parameter and never actually filtered.
+- `ExportResource.createTemplate()` and `updateTemplate()` now return `teamIds`, `projectIds`, `userIds`, `tagIds`, and `exportedFields` as parsed arrays, matching `getTemplate()`. These endpoints return the raw entity with those fields JSON-encoded as strings; the SDK now normalizes them.
+
+### Added
+- `DocumentReport.documentName` and `DocumentReport.paid` — returned by the reports API but previously missing from the type.
+- `TodoListParams.projectIds` and `TodoListParams.userIds` search filters.
+- `DocumentListParams.type` filter.
+- `TaskListParams` and `TagListParams` now extend `ListParams`, exposing `search`, `count`, and `offset` for the search endpoint.
+
+### Removed
+- **BREAKING**: `Task.projectId` removed. It was never populated by the API; use `Task.project` (the nested project object) instead.
+- **BREAKING**: `TeamResource.batchAddMembers()` removed. There is no corresponding backend endpoint, so it always returned `404`. Add team members individually with `addMember()`. (`ProjectResource.batchAddMembers()` is unaffected; it has a real endpoint.)
+
 ## [1.1.2] - 2026-05-25
 
 ### Added

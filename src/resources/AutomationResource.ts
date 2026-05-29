@@ -14,11 +14,21 @@ export class AutomationResource extends Resource {
     super(client, '/v1/automations');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: AutomationListParams): Promise<NavigablePage<Automation>> {
-    const response = await this.http.get<Page<Automation>, AutomationListParams>(
-      this.basePath,
-      params,
-    );
+    const query = params
+      ? {
+          projectId: params.projectId,
+          status: params.status,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Automation>>(this.basePath, query);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

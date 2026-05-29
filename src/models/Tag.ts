@@ -1,4 +1,4 @@
-import type { PageParams } from './common';
+import type { ListParams } from './common';
 import type { Team } from './Team';
 
 export interface Tag {
@@ -30,7 +30,7 @@ export interface TagUpdateRequest {
   archived?: boolean;
 }
 
-export interface TagListParams extends PageParams {
+export interface TagListParams extends ListParams {
   teamId?: string;
   projectId?: string;
   status?: 'all' | 'active' | 'inactive';

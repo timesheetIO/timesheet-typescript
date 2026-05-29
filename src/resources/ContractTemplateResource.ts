@@ -21,13 +21,24 @@ export class ContractTemplateResource extends Resource {
     return `${this.basePath}/${encodeURIComponent(organizationId)}/contract-templates`;
   }
 
+  /**
+   * These are the only filters this endpoint supports.
+   */
   async list(
     organizationId: string,
     params?: ContractTemplateListParams,
   ): Promise<NavigablePage<ContractTemplate>> {
-    const response = await this.http.get<Page<ContractTemplate>, ContractTemplateListParams>(
+    const query = params
+      ? {
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<ContractTemplate>>(
       this.orgPath(organizationId),
-      params,
+      query,
     );
     return this.createNavigablePage(response, (page) =>
       this.list(organizationId, { ...params, page }),

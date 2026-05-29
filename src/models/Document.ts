@@ -366,6 +366,7 @@ export interface DocumentListParams extends ListParams {
   organizationId?: string;
   organizationUnassigned?: boolean;
   category?: number;
+  type?: number;
   status?: string;
   template?: boolean;
   empty?: boolean;

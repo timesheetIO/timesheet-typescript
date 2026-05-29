@@ -60,13 +60,16 @@ describe('HR Resources', () => {
       );
     });
 
-    test('list should pass params', async () => {
-      const params = { status: 'pending', startDateTime: '2026-01-01' };
+    test('list should forward only GET-supported params and drop the rest', async () => {
+      // The GET list endpoint only supports contractId/page/limit. Advanced
+      // filters like status/startDate must go through search().
+      const params = { contractId: 'contract-1', status: 'pending', startDateTime: '2026-01-01' };
       await resource.list(orgId, params);
-      expect(mockClient.get).toHaveBeenCalledWith(
-        `/v1/organizations/${orgId}/absences`,
-        params,
-      );
+      expect(mockClient.get).toHaveBeenCalledWith(`/v1/organizations/${orgId}/absences`, {
+        contractId: 'contract-1',
+        page: undefined,
+        limit: undefined,
+      });
     });
 
     test('search should POST to search endpoint', async () => {

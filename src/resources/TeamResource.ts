@@ -20,8 +20,19 @@ export class TeamResource extends Resource {
     super(client, '/v1/teams');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: TeamListParams): Promise<NavigablePage<Team>> {
-    const response = await this.http.get<Page<Team>, TeamListParams>(this.basePath, params);
+    const query = params
+      ? {
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Team>>(this.basePath, query);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

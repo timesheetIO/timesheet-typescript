@@ -271,14 +271,21 @@ await client.tasks.update(task.id, {
   description: 'Implement new feature - completed'
 });
 
-// Search tasks
-const results = await client.tasks.searchAdvanced({
+// Search tasks (advanced filtering)
+const results = await client.tasks.search({
   projectIds: ['project-id'],
   search: 'feature',
   startDate: '2024-01-01',
   endDate: '2024-01-31'
 });
 ```
+
+> **`list()` vs `search()`** — `list()` is a `GET` and only forwards the filters its
+> endpoint supports (typically `sort`, `order`, `page`, `limit`, plus a few
+> endpoint-specific filters). Any other field is dropped before the request is sent.
+> For advanced filtering (array filters like `projectIds`/`tagIds`, date ranges,
+> free-text `search`, etc.) use `search()`, which sends the full `*ListParams` as a
+> `POST` body. Both return a paginated `NavigablePage`.
 
 ### Project Management
 
@@ -416,14 +423,15 @@ if (firstPage.hasNextPage) {
 }
 
 // Auto-pagination with async iterator
-const allTasks = await client.tasks.list({ projectId: 'project-id' });
+// (use search() to filter by project; projectId is not a list() filter)
+const allTasks = await client.tasks.search({ projectId: 'project-id' });
 for await (const task of allTasks) {
   console.log(task.description);
 }
 
 // Collect all results across all pages
-const allTasksArray = await client.tasks.list({ 
-  projectId: 'project-id' 
+const allTasksArray = await client.tasks.search({
+  projectId: 'project-id'
 }).then(page => page.toArray());
 ```
 

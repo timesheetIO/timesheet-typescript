@@ -15,8 +15,21 @@ export class TodoResource extends Resource {
     super(client, '/v1/todos');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: TodoListParams): Promise<NavigablePage<Todo>> {
-    const response = await this.http.get<Page<Todo>, TodoListParams>(this.basePath, params);
+    const query = params
+      ? {
+          projectId: params.projectId,
+          status: params.status,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Todo>>(this.basePath, query);
     return this.createNavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

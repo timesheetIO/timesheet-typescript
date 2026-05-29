@@ -14,8 +14,22 @@ export class TagResource extends Resource {
     super(client, '/v1/tags');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: TagListParams): Promise<NavigablePage<Tag>> {
-    const response = await this.http.get<Page<Tag>, TagListParams>(this.basePath, params);
+    const query = params
+      ? {
+          teamId: params.teamId,
+          projectId: params.projectId,
+          status: params.status,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Tag>>(this.basePath, query);
     return this.createNavigablePage(response, (page) => this.list({ ...params, page }));
   }
 

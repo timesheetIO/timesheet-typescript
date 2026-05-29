@@ -17,8 +17,21 @@ export class NoteResource extends Resource {
     super(client, '/v1/notes');
   }
 
+  /**
+   * Sends only basic filters supported by the GET endpoint; use search() for advanced filtering.
+   */
   async list(params?: NoteListParams): Promise<NavigablePage<Note>> {
-    const response = await this.http.get<Page<Note>, NoteListParams>(this.basePath, params);
+    const query = params
+      ? {
+          taskId: params.taskId,
+          sort: params.sort,
+          order: params.order,
+          page: params.page,
+          limit: params.limit,
+          organizationId: params.organizationId,
+        }
+      : undefined;
+    const response = await this.http.get<Page<Note>>(this.basePath, query);
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 
