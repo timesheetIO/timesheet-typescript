@@ -174,7 +174,7 @@ export class ExportResource extends Resource {
       if (Array.isArray(value)) return value as T[];
       if (typeof value === 'string' && value.length > 0) {
         try {
-          const parsed = JSON.parse(value);
+          const parsed: unknown = JSON.parse(value);
           return Array.isArray(parsed) ? (parsed as T[]) : undefined;
         } catch {
           return undefined;
