@@ -5,7 +5,10 @@ All notable changes to the Timesheet TypeScript SDK will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0] - 2026-08-06
+## [1.3.1] - 2026-08-06
+
+### Fixed
+- Moved `.prettierrc` into the package. It previously lived one directory up, outside the subtree that is split into the publish mirror, so the mirror linted with Prettier's defaults and every release failed on ~700 quote-style errors. 1.3.0 was tagged but never reached npm for this reason; 1.3.1 is its first published form.
 
 ### Added
 - `verifyWebhookSignature()` for verifying incoming webhook deliveries. The API signs each delivery as `X-Webhook-Signature: sha256=HMAC(secret, "{timestamp}.{body}")`, with the timestamp in `X-Webhook-Timestamp`. Verification is constant-time and rejects deliveries older than a configurable tolerance (300 seconds by default). Pass the **raw** request body, for example via `express.raw()`: the API escapes `<`, `>`, `&` and `=` as unicode sequences, so `JSON.stringify` of a parsed body will not match.
