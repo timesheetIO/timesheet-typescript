@@ -73,6 +73,19 @@ export interface Webhook {
   lastUpdate?: number;
 }
 
+/**
+ * Returned by {@link WebhookResource.create}, the only response that carries the signing
+ * secret. List, get and update responses omit it, so store this value when you create the
+ * webhook: it cannot be read back afterwards.
+ */
+export interface WebhookCreateResponse extends Webhook {
+  /**
+   * HMAC-SHA256 key used to sign every delivery for this webhook.
+   * Pass it to `verifyWebhookSignature` to authenticate incoming payloads.
+   */
+  secret: string;
+}
+
 export interface WebhookList {
   items: Webhook[];
   params: WebhookListParams;

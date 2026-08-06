@@ -435,6 +435,46 @@ const allTasksArray = await client.tasks.search({
 }).then(page => page.toArray());
 ```
 
+### Webhooks
+
+Creating a webhook returns a signing secret. It is returned only at creation, so store it
+then; list and get responses omit it.
+
+```typescript
+const webhook = await client.webhooks.create({
+  target: 'https://example.com/hooks/timesheet',
+  event: 'task.create',
+});
+await store(webhook.id, webhook.secret);
+```
+
+Verify deliveries with `verifyWebhookSignature`. Pass the **raw** body: the API escapes
+`<`, `>` and `&` as unicode sequences, so `JSON.stringify` of a parsed body will not
+reproduce the signed bytes.
+
+```typescript
+import express from 'express';
+import { verifyWebhookSignature } from '@timesheet/sdk';
+
+app.post('/hooks/timesheet', express.raw({ type: 'application/json' }), (req, res) => {
+  const valid = verifyWebhookSignature({
+    payload: req.body,
+    signature: req.header('x-webhook-signature') ?? '',
+    timestamp: req.header('x-webhook-timestamp') ?? '',
+    secret: process.env.TIMESHEET_WEBHOOK_SECRET!,
+  });
+
+  if (!valid) return res.status(400).send('invalid signature');
+
+  const event = JSON.parse(req.body.toString('utf8'));
+  console.log(event.event, event.item);
+  res.sendStatus(200);
+});
+```
+
+The signature covers `"{timestamp}.{body}"`, so the timestamp cannot be altered without
+invalidating it. Deliveries older than `toleranceSeconds` (300 by default) are rejected.
+
 ### Error Handling
 
 ```typescript

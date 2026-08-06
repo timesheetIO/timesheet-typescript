@@ -36,6 +36,7 @@ export * from './exceptions';
 export * from './models';
 export * from './http';
 export * from './resources';
+export * from './webhooks';
 
 /**
  * Main entry point for the Timesheet SDK.

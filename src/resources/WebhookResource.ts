@@ -3,6 +3,7 @@ import type {
   Page,
   Webhook,
   WebhookCreateRequest,
+  WebhookCreateResponse,
   WebhookListParams,
   WebhookUpdateRequest,
 } from '../models';
@@ -30,8 +31,12 @@ export class WebhookResource extends Resource {
     return new NavigablePage(response, (page) => this.list({ ...params, page }));
   }
 
-  async create(data: WebhookCreateRequest): Promise<Webhook> {
-    return this.http.post<Webhook>(this.basePath, data);
+  /**
+   * The response carries the signing secret, and this is the only time the API returns it.
+   * Persist it alongside the webhook id if you intend to verify deliveries.
+   */
+  async create(data: WebhookCreateRequest): Promise<WebhookCreateResponse> {
+    return this.http.post<WebhookCreateResponse>(this.basePath, data);
   }
 
   async update(id: string, data: WebhookUpdateRequest): Promise<Webhook> {
