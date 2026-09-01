@@ -44,12 +44,12 @@
     "invoicing",
     "team-collaboration"
   ],
-  "author": "Timesheet.io <support@timesheet.io>",
+  "author": "timesheet.io <support@timesheet.io>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/timesheetIO/timesheet-typescript/issues"
   },
-  "homepage": "https://github.com/timesheetIO/timesheet-typescript#readme",
+  "homepage": "https://timesheet.io/en",
   "engines": {
     "node": ">=18.0.0"
   },
