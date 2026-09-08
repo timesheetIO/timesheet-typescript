@@ -45,6 +45,8 @@ export interface Profile {
   admin?: boolean;
   deleted?: boolean;
   overtimeAccessible?: boolean;
+  /** True when an organization the user belongs to carries the Business entitlement. */
+  businessOrganizationMember?: boolean;
 
   // Display fields
   displayName?: string;
