@@ -4,6 +4,7 @@ export { OrganizationResource } from './OrganizationResource';
 export { TeamResource } from './TeamResource';
 export { ProjectResource } from './ProjectResource';
 export { TaskResource } from './TaskResource';
+export { TaskActivityResource } from './TaskActivityResource';
 export { RateResource } from './RateResource';
 export { TagResource } from './TagResource';
 export { ExpenseResource } from './ExpenseResource';

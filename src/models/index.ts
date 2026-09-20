@@ -1,6 +1,7 @@
 export * from './common';
 export * from './Page';
 export * from './Task';
+export * from './TaskActivity';
 export * from './Project';
 export * from './Team';
 export * from './Organization';

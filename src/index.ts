@@ -23,6 +23,7 @@ import {
   SettingsResource,
   TagResource,
   TaskResource,
+  TaskActivityResource,
   TeamResource,
   TimerResource,
   TodoResource,
@@ -63,6 +64,7 @@ export class TimesheetClient {
   public readonly teams: TeamResource;
   public readonly projects: ProjectResource;
   public readonly tasks: TaskResource;
+  public readonly taskActivities: TaskActivityResource;
   public readonly rates: RateResource;
   public readonly tags: TagResource;
   public readonly expenses: ExpenseResource;
@@ -136,6 +138,7 @@ export class TimesheetClient {
     this.teams = new TeamResource(this.apiClient);
     this.projects = new ProjectResource(this.apiClient);
     this.tasks = new TaskResource(this.apiClient);
+    this.taskActivities = new TaskActivityResource(this.apiClient);
     this.rates = new RateResource(this.apiClient);
     this.tags = new TagResource(this.apiClient);
     this.expenses = new ExpenseResource(this.apiClient);
