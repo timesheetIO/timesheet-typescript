@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.2] - 2026-09-01
 
+### Security
+- `axios` moves from exactly `1.12.0` to `^1.20.0`. The exact pin kept every consumer on a
+  version with known high-severity advisories, and npm could not resolve a fixed one.
+
 ### Changed
 - Package metadata for npm: `homepage` now points at timesheet.io, and `author` is
   normalized to `timesheet.io <support@timesheet.io>` across every Timesheet package.
