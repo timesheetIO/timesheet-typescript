@@ -409,6 +409,12 @@ export interface ExportParams {
   email?: string;
   /** Filename for the export */
   filename?: string;
+  /**
+   * Heading printed at the top of a PDF export, such as "Hours report, Jane Smith".
+   * Empty or omitted for the report's translated name. Excel and CSV exports have no
+   * title row, so it only applies when `format` is `pdf`.
+   */
+  title?: string;
   /** Filter by team IDs */
   teamIds?: string[];
   /** Filter by project IDs */
@@ -532,6 +538,8 @@ export interface ExportTemplate {
   email?: string;
   /** Filename */
   filename?: string;
+  /** Heading of the template's PDF exports; empty for the report's name */
+  title?: string;
   /** Custom exported fields */
   exportedFields?: ExportedField[];
 }
@@ -566,6 +574,8 @@ export interface ExportTemplateCreateRequest {
   email?: string;
   /** Filename */
   filename?: string;
+  /** Heading of the template's PDF exports; empty or omitted for the report's name */
+  title?: string;
   /** Custom exported fields */
   exportedFields?: ExportedField[];
 }
@@ -600,6 +610,11 @@ export interface ExportTemplateUpdateRequest {
   email?: string;
   /** Filename */
   filename?: string;
+  /**
+   * Heading of the template's PDF exports. Omit it to keep the current title;
+   * an empty string clears it, so exports use the report's name again.
+   */
+  title?: string;
   /** Custom exported fields */
   exportedFields?: ExportedField[];
 }

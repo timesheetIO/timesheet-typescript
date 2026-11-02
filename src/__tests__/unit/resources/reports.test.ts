@@ -15,6 +15,7 @@ import type {
   ExportParams,
   FileResponse,
   ExportTemplate,
+  ExportTemplateCreateRequest,
   ExportFieldsResponse,
   ExportReportsResponse,
   CustomExportField,
@@ -261,6 +262,25 @@ describe('Reports Resources', () => {
         expect(mockClient.post).toHaveBeenCalledWith('/v1/export/data', params);
         expect(result).toEqual(mockResponse);
       });
+
+      it('sends the PDF title', async () => {
+        const params: ExportParams = {
+          report: 1,
+          startDate: '2024-01-01',
+          endDate: '2024-01-31',
+          format: 'pdf',
+          title: 'Hours report, Jane Smith',
+        };
+
+        mockClient.post.mockResolvedValueOnce({ url: 'https://storage.example.com/export.pdf' });
+
+        await resource.generate(params);
+
+        expect(mockClient.post).toHaveBeenCalledWith(
+          '/v1/export/data',
+          expect.objectContaining({ title: 'Hours report, Jane Smith' }),
+        );
+      });
     });
 
     describe('send', () => {
@@ -421,6 +441,31 @@ describe('Reports Resources', () => {
         expect(mockClient.post).toHaveBeenCalledWith('/v1/export/templates', createData);
         expect(result).toEqual(mockTemplate);
       });
+
+      it('sends and keeps the PDF title', async () => {
+        const createData: ExportTemplateCreateRequest = {
+          name: 'Monthly hours',
+          report: 1,
+          format: 'pdf',
+          title: 'Hours report, Jane Smith',
+        };
+
+        // The create endpoint returns the raw entity, with the ID lists as JSON strings
+        mockClient.post.mockResolvedValueOnce({
+          id: 'tmpl_new',
+          name: 'Monthly hours',
+          report: 1,
+          format: 'pdf',
+          title: 'Hours report, Jane Smith',
+          teamIds: '["team_1"]',
+        });
+
+        const result = await resource.createTemplate(createData);
+
+        expect(mockClient.post).toHaveBeenCalledWith('/v1/export/templates', createData);
+        expect(result.title).toBe('Hours report, Jane Smith');
+        expect(result.teamIds).toEqual(['team_1']);
+      });
     });
 
     describe('getTemplate', () => {
@@ -455,6 +500,14 @@ describe('Reports Resources', () => {
 
         expect(mockClient.put).toHaveBeenCalledWith('/v1/export/templates/tmpl_123', updateData);
         expect(result).toEqual(mockTemplate);
+      });
+
+      it('sends an empty title, which clears it', async () => {
+        mockClient.put.mockResolvedValueOnce({ id: 'tmpl_123', name: 'Monthly hours', report: 1 });
+
+        await resource.updateTemplate('tmpl_123', { title: '' });
+
+        expect(mockClient.put).toHaveBeenCalledWith('/v1/export/templates/tmpl_123', { title: '' });
       });
     });
 

@@ -5,6 +5,16 @@ All notable changes to the Timesheet TypeScript SDK will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `title` on `ExportParams`: the heading printed at the top of a PDF export, such as
+  "Hours report, Jane Smith". Empty or omitted keeps the report's translated name. Excel and
+  CSV exports have no title row, so it only applies when `format` is `pdf`.
+- `title` on `ExportTemplate`, `ExportTemplateCreateRequest` and `ExportTemplateUpdateRequest`,
+  so a template keeps its PDF heading. On `updateTemplate()`, omit it to keep the current title
+  or send `''` to clear it. Exports from a template carry its title.
+
 ## [1.3.2] - 2026-09-01
 
 ### Security
