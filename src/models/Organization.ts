@@ -14,6 +14,8 @@ export interface Organization {
   user?: string;
   aiChatEnabled?: boolean;
   permission?: OrganizationPermission;
+  /** The user was removed from this organization and has a contract there (listed with `includeFormer`). */
+  former?: boolean;
   created?: number;
   lastUpdate?: number;
   deleted?: boolean;
@@ -51,6 +53,11 @@ export interface OrganizationUpdateRequest {
 
 export interface OrganizationListParams extends ListParams {
   permission?: string;
+  /**
+   * Also list the organizations the user has a contract in but is no longer a member of, marked
+   * `former`, after the current ones. Their absences and balances stay readable, read-only.
+   */
+  includeFormer?: boolean;
 }
 
 /**
@@ -90,6 +97,7 @@ export interface OrganizationMemberTeamAssignment {
   teamMemberId?: string;
   teamId?: string;
   teamName?: string;
+  teamColor?: number;
   employeeId?: string;
   deleted?: boolean;
   permission?: TeamPermission;
@@ -126,4 +134,6 @@ export interface OrganizationMemberUpdateRequest {
  */
 export interface OrganizationMemberListParams extends ListParams {
   deleted?: boolean;
+  /** Only former members: no active organization permission and no active membership in its teams. */
+  former?: boolean;
 }

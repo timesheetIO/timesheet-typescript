@@ -100,6 +100,22 @@ export interface TeamListParams extends ListParams {
   sort?: 'alpha' | 'permission' | 'created';
   order?: 'asc' | 'desc';
   organizationId?: string;
+  /**
+   * Also list the teams the user left that still hold their own tasks, after the current ones.
+   * They are read-only for the user. `search()` only.
+   */
+  includeFormer?: boolean;
+  /** Only these teams. `search()` only. */
+  teamIds?: string[];
+  /** Only the teams the user manages (manager or owner). `search()` only. */
+  managed?: boolean;
+  /**
+   * The teams the user may create items in: the ones they manage plus every team of the
+   * organizations they administer. `search()` only.
+   */
+  manageable?: boolean;
+  /** Only the teams this user is an active member of. `search()` only. */
+  memberUserId?: string;
 }
 
 export interface TeamMemberListParams extends ListParams {
@@ -113,6 +129,8 @@ export interface TeamMemberListParams extends ListParams {
   deleted?: boolean;
   userIds?: string[];
   withoutUserIds?: string[];
+  /** Only members who join new projects automatically (true) or only the others (false); all when left out. */
+  autoJoinProjects?: boolean;
 }
 
 /**

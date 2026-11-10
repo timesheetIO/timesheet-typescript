@@ -32,6 +32,7 @@ export class OrganizationResource extends Resource {
           page: params.page,
           limit: params.limit,
           permission: params.permission,
+          includeFormer: params.includeFormer,
         }
       : undefined;
     const response = await this.http.get<Page<Organization>>(this.basePath, query);

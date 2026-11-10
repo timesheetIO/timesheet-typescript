@@ -47,6 +47,8 @@ export interface Profile {
   overtimeAccessible?: boolean;
   /** True when an organization the user belongs to carries the Business entitlement. */
   businessOrganizationMember?: boolean;
+  /** True when the user has a contract in an organization they are no longer a member of. */
+  formerOrganizationMember?: boolean;
 
   // Display fields
   displayName?: string;

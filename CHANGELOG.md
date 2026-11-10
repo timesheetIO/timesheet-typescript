@@ -5,6 +5,27 @@ All notable changes to the Timesheet TypeScript SDK will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `tasks.breakdown()` (`POST /v1/tasks/breakdown`): the duration, breaks, salary, task count and
+  latest start of the finished tasks matching a filter, per project, member, tag, location and
+  start day, without loading the tasks. Salaries are rounded per task before they are added up. A
+  task counts fully for each of its tags, so the tag totals overlap. New types `TaskBreakdown`
+  and `TaskBreakdownItem`.
+- Team list filters for `teams.search()`: `teamIds`, `managed` (teams the user manages),
+  `manageable` (teams the user may create items in, including every team of the organizations
+  they administer) and `memberUserId` (teams a user is an active member of).
+- `includeFormer` on `TeamListParams`, `ProjectListParams` and `OrganizationListParams`: also
+  list the teams, projects and organizations the user left that still hold their own time or
+  contract, read-only. `organizations.list()` sends it as a query parameter. Organizations
+  listed this way carry `former: true`.
+- `former` on `OrganizationMemberListParams` (only members without an active permission or team
+  membership) and `autoJoinProjects` on `TeamMemberListParams`.
+- `teamColor` on `OrganizationMemberTeamAssignment`, `formerOrganizationMember` on `Profile`
+  and `changeableCount` in task list responses (how many of the tasks the user may change in a
+  batch action).
+
 ## [1.4.0] - 2026-11-02
 
 ### Added

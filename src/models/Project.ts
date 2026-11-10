@@ -131,6 +131,11 @@ export interface ProjectListParams extends ListParams {
   taskFilter?: string;
   taskUserIds?: string[];
   empty?: boolean;
+  /**
+   * Also list the projects the user has own tasks on but no membership in anymore (they left the
+   * project, team or organization). They are read-only for the user. `search()` only.
+   */
+  includeFormer?: boolean;
 }
 
 export interface ProjectMemberListParams extends ListParams {

@@ -278,7 +278,19 @@ const results = await client.tasks.search({
   startDate: '2024-01-01',
   endDate: '2024-01-31'
 });
+
+// Totals of the finished tasks, without loading them
+const totals = await client.tasks.statistics({ startDate: '2024-01-01', endDate: '2024-01-31' });
+console.log(`Worked ${totals.duration / 3600} hours`);
+
+// Totals per project, member, tag, location and start day
+const breakdown = await client.tasks.breakdown({ startDate: '2024-01-01', endDate: '2024-01-31' });
+for (const project of breakdown.projects) {
+  console.log(`${project.name ?? 'No project'}: ${project.duration / 3600} hours in ${project.taskCount} tasks`);
+}
 ```
+
+A task with several tags counts fully for each of them, so the `tags` totals overlap.
 
 > **`list()` vs `search()`** — `list()` is a `GET` and only forwards the filters its
 > endpoint supports (typically `sort`, `order`, `page`, `limit`, plus a few

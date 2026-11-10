@@ -3,6 +3,7 @@ import type {
   NavigablePage,
   Page,
   Task,
+  TaskBreakdown,
   TaskCreateRequest,
   TaskListParams,
   TaskStatistic,
@@ -79,6 +80,15 @@ export class TaskResource extends Resource {
    */
   async statistics(params: TaskListParams): Promise<TaskStatistic> {
     return this.http.post<TaskStatistic>(`${this.basePath}/statistics`, params);
+  }
+
+  /**
+   * Get task totals per project, member, tag, location and start day for tasks matching the
+   * given filter, without returning the individual tasks. Paging parameters are ignored.
+   * @param params Filter parameters
+   */
+  async breakdown(params: TaskListParams): Promise<TaskBreakdown> {
+    return this.http.post<TaskBreakdown>(`${this.basePath}/breakdown`, params);
   }
 
   /**
