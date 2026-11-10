@@ -5,7 +5,10 @@ All notable changes to the Timesheet TypeScript SDK will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.5.0] - 2026-11-10
+
+1.4.0 never reached npm, so this is the first published version with its PDF `title` on exports
+and templates (below).
 
 ### Added
 - `tasks.breakdown()` (`POST /v1/tasks/breakdown`): the duration, breaks, salary, task count and
@@ -27,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   batch action).
 
 ## [1.4.0] - 2026-11-02
+
+Not published to npm; these changes first ship in 1.5.0.
 
 ### Added
 - `title` on `ExportParams`: the heading printed at the top of a PDF export, such as
